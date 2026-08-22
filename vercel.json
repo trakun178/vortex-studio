@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/cron-vkpost", "schedule": "0 7 * * *" },
+    { "path": "/api/content-gen", "schedule": "0 9 * * *" }
+  ]
+}

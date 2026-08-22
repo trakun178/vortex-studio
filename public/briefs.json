@@ -1,0 +1,435 @@
+{
+  "landing": {
+    "title": "Бриф: Лендинг",
+    "questions": [
+      {
+        "id": "name",
+        "label": "Название продукта или компании",
+        "type": "text",
+        "required": true,
+        "placeholder": "Например: барбершоп «Бритва»"
+      },
+      {
+        "id": "essence",
+        "label": "Что продаёте? Опишите бизнес в 2–3 предложениях",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "audience",
+        "label": "Кто ваш клиент и его главная боль?",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "action",
+        "label": "Главное действие на сайте",
+        "type": "choice",
+        "required": true,
+        "options": [
+          "Заявка на сайте",
+          "Звонок",
+          "Telegram / WhatsApp",
+          "Онлайн-оплата"
+        ]
+      },
+      {
+        "id": "refs",
+        "label": "3–5 примеров: конкуренты или просто классные сайты (ссылки)",
+        "type": "area"
+      },
+      {
+        "id": "style",
+        "label": "Желаемый стиль",
+        "type": "choice",
+        "required": true,
+        "options": [
+          "Минимализм",
+          "Премиум",
+          "Агрессивный",
+          "Дружелюбный",
+          "Хай-тек",
+          "Классика"
+        ]
+      },
+      {
+        "id": "colors",
+        "label": "Фирменный цвет и «запрещённые» цвета",
+        "type": "text",
+        "placeholder": "Например: зелёный; без красного"
+      },
+      {
+        "id": "benefits",
+        "label": "3–5 главных выгод для клиента",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "assets",
+        "label": "Какие материалы у вас есть?",
+        "type": "multi",
+        "options": ["Лого", "Фото", "Тексты", "Ничего — нужно создать"]
+      },
+      {
+        "id": "budget",
+        "label": "Вилка бюджета",
+        "type": "choice",
+        "options": [
+          "15–25 тыс",
+          "25–60 тыс",
+          "60–150 тыс",
+          "150+ тыс",
+          "Не определился"
+        ]
+      },
+      {
+        "id": "annoy",
+        "label": "Что бесит на сайтах конкурентов?",
+        "type": "area"
+      },
+      {
+        "id": "contact",
+        "label": "Контакт для связи (телефон или TG)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "prompt": "Дизайн лендинга для «{name}». Суть: {essence} ЦА и боль: {audience} Главное CTA: {action}. Стиль: {style}. Палитра: {colors}. Выгоды: {benefits}. Материалы: {assets}. Бюджет: {budget}. Референсы: {refs}. Избегать: {annoy}. Структура: hero (УТП + CTA), блок выгод, соцдоказательства, финальный CTA. Контакт: {contact}."
+  },
+  "onepage": {
+    "title": "Бриф: Одностраничник",
+    "questions": [
+      {
+        "id": "name",
+        "label": "Название продукта или компании",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "essence",
+        "label": "Что продаёте? Опишите бизнес в 2–3 предложениях",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "audience",
+        "label": "Кто ваш клиент и его главная боль?",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "action",
+        "label": "Главное действие на сайте",
+        "type": "choice",
+        "required": true,
+        "options": [
+          "Заявка на сайте",
+          "Звонок",
+          "Telegram / WhatsApp",
+          "Онлайн-оплата"
+        ]
+      },
+      {
+        "id": "sections",
+        "label": "Какие секции нужны?",
+        "type": "multi",
+        "options": [
+          "О нас",
+          "Услуги и цены",
+          "Отзывы",
+          "Команда",
+          "FAQ",
+          "Портфолио",
+          "Контакты"
+        ]
+      },
+      {
+        "id": "refs",
+        "label": "3–5 примеров сайтов, которые нравятся (ссылки)",
+        "type": "area"
+      },
+      {
+        "id": "style",
+        "label": "Желаемый стиль",
+        "type": "choice",
+        "required": true,
+        "options": [
+          "Минимализм",
+          "Премиум",
+          "Агрессивный",
+          "Дружелюбный",
+          "Хай-тек",
+          "Классика"
+        ]
+      },
+      {
+        "id": "colors",
+        "label": "Фирменный цвет и «запрещённые» цвета",
+        "type": "text"
+      },
+      {
+        "id": "benefits",
+        "label": "3–5 главных выгод для клиента",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "assets",
+        "label": "Какие материалы у вас есть?",
+        "type": "multi",
+        "options": ["Лого", "Фото", "Тексты", "Ничего — нужно создать"]
+      },
+      {
+        "id": "budget",
+        "label": "Вилка бюджета",
+        "type": "choice",
+        "options": [
+          "15–25 тыс",
+          "25–60 тыс",
+          "60–150 тыс",
+          "150+ тыс",
+          "Не определился"
+        ]
+      },
+      {
+        "id": "contact",
+        "label": "Контакт для связи (телефон или TG)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "prompt": "Дизайн одностраничника для «{name}». Суть: {essence} ЦА и боль: {audience} CTA: {action}. Секции: {sections}. Стиль: {style}. Палитра: {colors}. Выгоды: {benefits}. Материалы: {assets}. Бюджет: {budget}. Референсы: {refs}. Контакт: {contact}."
+  },
+  "corporate": {
+    "title": "Бриф: Корпоративный сайт",
+    "questions": [
+      {
+        "id": "name",
+        "label": "Название компании",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "essence",
+        "label": "Чем занимается компания (2–3 предложения)",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "audience",
+        "label": "Кто ваши клиенты и партнёры?",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "pages",
+        "label": "Какие страницы нужны?",
+        "type": "multi",
+        "options": [
+          "Главная",
+          "О компании",
+          "Услуги",
+          "Портфолио",
+          "Блог / Новости",
+          "Вакансии",
+          "Контакты"
+        ]
+      },
+      {
+        "id": "cms",
+        "label": "Кто будет обновлять контент?",
+        "type": "choice",
+        "options": ["Мы сами — нужна CMS", "Вы — достаточно статики"]
+      },
+      {
+        "id": "languages",
+        "label": "Языки сайта",
+        "type": "text",
+        "placeholder": "Например: RU / EN"
+      },
+      {
+        "id": "refs",
+        "label": "3–5 примеров сайтов, которые нравятся (ссылки)",
+        "type": "area"
+      },
+      {
+        "id": "style",
+        "label": "Желаемый стиль",
+        "type": "choice",
+        "required": true,
+        "options": [
+          "Минимализм",
+          "Премиум",
+          "Агрессивный",
+          "Дружелюбный",
+          "Хай-тек",
+          "Классика"
+        ]
+      },
+      {
+        "id": "colors",
+        "label": "Фирменный цвет и «запрещённые» цвета",
+        "type": "text"
+      },
+      {
+        "id": "assets",
+        "label": "Какие материалы у вас есть?",
+        "type": "multi",
+        "options": ["Лого", "Фото", "Тексты", "Ничего — нужно создать"]
+      },
+      {
+        "id": "budget",
+        "label": "Вилка бюджета",
+        "type": "choice",
+        "options": [
+          "15–25 тыс",
+          "25–60 тыс",
+          "60–150 тыс",
+          "150+ тыс",
+          "Не определился"
+        ]
+      },
+      {
+        "id": "contact",
+        "label": "Контакт для связи (телефон или TG)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "prompt": "Дизайн корпоративного сайта для «{name}». Деятельность: {essence} Аудитория: {audience} Страницы: {pages}. CMS: {cms}. Языки: {languages}. Стиль: {style}. Палитра: {colors}. Материалы: {assets}. Бюджет: {budget}. Референсы: {refs}. Контакт: {contact}."
+  },
+  "portal": {
+    "title": "Бриф: Портал / Веб-приложение",
+    "questions": [
+      {
+        "id": "name",
+        "label": "Название системы",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "essence",
+        "label": "Что должна делать система? Опишите суть",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "users",
+        "label": "Кто пользуется системой (роли)",
+        "type": "area",
+        "required": true,
+        "placeholder": "Например: клиент, менеджер, админ"
+      },
+      {
+        "id": "features",
+        "label": "Какие функции нужны?",
+        "type": "multi",
+        "options": [
+          "Личный кабинет",
+          "Онлайн-оплата",
+          "Админ-панель",
+          "REST API",
+          "Уведомления",
+          "Поиск и каталог",
+          "Роли и права"
+        ]
+      },
+      {
+        "id": "integrations",
+        "label": "Интеграции (1С, CRM, платежи)",
+        "type": "text"
+      },
+      {
+        "id": "example",
+        "label": "Пример похожей системы (ссылка)",
+        "type": "text"
+      },
+      {
+        "id": "style",
+        "label": "Желаемый стиль интерфейса",
+        "type": "choice",
+        "options": ["Минимализм", "Премиум", "Хай-тек", "Классика"]
+      },
+      {
+        "id": "budget",
+        "label": "Вилка бюджета",
+        "type": "choice",
+        "options": ["60–150 тыс", "150+ тыс", "Не определился"]
+      },
+      {
+        "id": "contact",
+        "label": "Контакт для связи (телефон или TG)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "prompt": "Проектирование веб-приложения «{name}». Суть: {essence} Роли: {users}. Функции: {features}. Интеграции: {integrations}. Пример: {example}. Стиль UI: {style}. Бюджет: {budget}. Контакт: {contact}."
+  },
+  "bot": {
+    "title": "Бриф: Telegram-бот",
+    "questions": [
+      {
+        "id": "name",
+        "label": "Название бизнеса / бота",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "tasks",
+        "label": "Что должен уметь бот?",
+        "type": "multi",
+        "required": true,
+        "options": [
+          "Приём заказов",
+          "FAQ и автоответы",
+          "Рассылки",
+          "Оплата",
+          "Запись",
+          "Заявки в CRM"
+        ]
+      },
+      {
+        "id": "audience",
+        "label": "Кто пишет боту (ваши клиенты)",
+        "type": "area",
+        "required": true
+      },
+      {
+        "id": "receive",
+        "label": "Куда получать заказы?",
+        "type": "choice",
+        "options": ["В TG-чат", "В CRM", "В Google-таблицу"]
+      },
+      {
+        "id": "payments",
+        "label": "Оплата в боте",
+        "type": "choice",
+        "options": ["Да, онлайн-оплата", "Нет"]
+      },
+      {
+        "id": "tone",
+        "label": "Тон общения бота",
+        "type": "choice",
+        "options": ["Деловой", "Дружелюбный", "Игривый"]
+      },
+      {
+        "id": "integrations",
+        "label": "Интеграции (CRM, платежи)",
+        "type": "text"
+      },
+      {
+        "id": "budget",
+        "label": "Вилка бюджета",
+        "type": "choice",
+        "options": ["15–25 тыс", "25–60 тыс", "60–150 тыс", "Не определился"]
+      },
+      {
+        "id": "contact",
+        "label": "Контакт для связи (телефон или TG)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "prompt": "Telegram-бот для «{name}». Задачи: {tasks}. Аудитория: {audience} Заявки: {receive}. Оплата: {payments}. Тон: {tone}. Интеграции: {integrations}. Бюджет: {budget}. Контакт: {contact}."
+  }
+}

@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Бриф — VORTEX.studio</title>
+    <style>
+      body {
+        margin: 0;
+        background: #080b0f;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        color: #e8eef4;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px 16px 60px;
+      }
+      a.back {
+        color: #7a9ab0;
+        font-size: 13px;
+        text-decoration: none;
+      }
+      h1 {
+        font-size: 26px;
+        font-weight: 900;
+        margin: 16px 0 4px;
+      }
+      p.sub {
+        color: #7a9ab0;
+        font-size: 13px;
+        margin: 0 0 24px;
+      }
+      .q {
+        display: block;
+        margin-bottom: 18px;
+      }
+      .q > span {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #b0c8d8;
+      }
+      input,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        background: #0e1318;
+        border: 1px solid #1e2d3d;
+        border-radius: 10px;
+        padding: 12px;
+        color: #e8eef4;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #39ff6e80;
+      }
+      .err {
+        border-color: #ff5470 !important;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chips button {
+        background: #0e1318;
+        border: 1px solid #2e4050;
+        color: #b0c8d8;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .chips button.on {
+        background: #39ff6e;
+        border-color: #39ff6e;
+        color: #08100a;
+        font-weight: 700;
+      }
+      .btn {
+        display: block;
+        width: 100%;
+        background: #39ff6e;
+        color: #08100a;
+        border: none;
+        border-radius: 10px;
+        padding: 14px;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      #status {
+        margin-top: 14px;
+        font-size: 14px;
+        color: #ff5470;
+      }
+      .done {
+        text-align: center;
+        padding: 60px 0;
+      }
+      .done h2 {
+        font-size: 28px;
+        font-weight: 900;
+        color: #39ff6e;
+        margin: 0 0 12px;
+      }
+      .done p {
+        color: #b0c8d8;
+        font-size: 15px;
+      }
+      .done .sub {
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="https://www.vortex-studio.ru/">← На сайт</a>
+      <h1 id="title">Бриф</h1>
+      <p class="sub">
+        5–7 минут — и мы соберём дизайн, который попадёт в точку с первого раза.
+      </p>
+      <form id="form"></form>
+      <button class="btn" id="send">Отправить бриф →</button>
+      <p id="status"></p>
+      <div class="done" id="done" style="display: none">
+        <h2>✅ Бриф улетел!</h2>
+        <p>Мы свяжемся с вами в течение 2 часов в рабочее время.</p>
+        <p class="sub">
+          Перенаправляем на сайт через <span id="sec">15</span> сек…
+        </p>
+      </div>
+    </div>
+    <script>
+      const API_HOOK =
+        "https://script.google.com/macros/s/AKfycby4DzKTWZIwHI5SwRGBUtBhlP1reXwr6dzKYAzoMsk3vl4IueLFExNMyYImAfkiS0R5/exec";
+      const state = {};
+      let cfg = null;
+      const service =
+        new URLSearchParams(location.search).get("service") || "landing";
+
+      fetch("/briefs.json")
+        .then((r) => r.json())
+        .then((data) => {
+          cfg = data[service] || data.landing;
+          document.title = cfg.title + " — VORTEX.studio";
+          document.getElementById("title").textContent = cfg.title;
+          document.getElementById("form").innerHTML = cfg.questions
+            .map((q) => {
+              const req = q.required ? " *" : "";
+              if (q.type === "text")
+                return `<label class="q"><span>${q.label}${req}</span><input data-id="${q.id}" placeholder="${q.placeholder || ""}"></label>`;
+              if (q.type === "area")
+                return `<label class="q"><span>${q.label}${req}</span><textarea data-id="${q.id}" rows="3" placeholder="${q.placeholder || ""}"></textarea></label>`;
+              return `<div class="q"><span>${q.label}${req}</span><div class="chips" data-id="${q.id}" data-multi="${q.type === "multi"}">${q.options.map((o) => `<button type="button" data-v="${o}">${o}</button>`).join("")}</div></div>`;
+            })
+            .join("");
+        });
+
+      document.getElementById("form").addEventListener("input", (e) => {
+        if (e.target.matches("input, textarea"))
+          e.target.classList.remove("err");
+      });
+
+      document.getElementById("form").addEventListener("click", (e) => {
+        const btn = e.target.closest(".chips button");
+        if (!btn) return;
+        const wrap = btn.parentElement;
+        const id = wrap.dataset.id;
+        if (wrap.dataset.multi === "true") {
+          btn.classList.toggle("on");
+          state[id] = [...wrap.querySelectorAll("button.on")]
+            .map((b) => b.dataset.v)
+            .join(", ");
+        } else {
+          wrap
+            .querySelectorAll("button")
+            .forEach((b) => b.classList.remove("on"));
+          btn.classList.add("on");
+          state[id] = btn.dataset.v;
+        }
+      });
+
+      document.getElementById("send").addEventListener("click", async () => {
+        if (!cfg) return;
+        let bad = false;
+        const lines = cfg.questions.map((q) => {
+          let val = "";
+          if (q.type === "text" || q.type === "area") {
+            const el = document.querySelector(`[data-id="${q.id}"]`);
+            val = (el.value || "").trim();
+            if (q.required && !val) {
+              el.classList.add("err");
+              bad = true;
+            } else el.classList.remove("err");
+          } else {
+            val = (state[q.id] || "").trim();
+            if (q.required && !val) bad = true;
+          }
+          return `${q.label}: ${val || "—"}`;
+        });
+        const st = document.getElementById("status");
+        if (bad) {
+          st.textContent = "⚠️ Заполните поля со звёздочкой *";
+          return;
+        }
+
+        let prompt = cfg.prompt;
+        cfg.questions.forEach((q) => {
+          const m = lines.find((l) => l.startsWith(q.label + ":"));
+          const val = m ? m.split(": ").slice(1).join(": ") : "";
+          prompt = prompt.split("{" + q.id + "}").join(val);
+        });
+
+        st.textContent = "Отправляем…";
+        const r = await fetch(API_HOOK, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            kind: "brief",
+            title: cfg.title,
+            text: lines.join("\n"),
+            prompt,
+          }),
+        });
+        const j = await r.json();
+        if (!j.ok) {
+          st.textContent = "⚠️ Ошибка отправки, попробуйте ещё раз.";
+          return;
+        }
+
+        document.getElementById("form").style.display = "none";
+        document.getElementById("send").style.display = "none";
+        st.style.display = "none";
+        document.getElementById("done").style.display = "block";
+        let s = 15;
+        const t = setInterval(() => {
+          s--;
+          const el = document.getElementById("sec");
+          if (el) el.textContent = s;
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(t);
+          location.href = "https://www.vortex-studio.ru/";
+        }, 15000);
+      });
+    </script>
+  </body>
+</html>

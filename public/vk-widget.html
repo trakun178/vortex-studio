@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VORTEX.studio — услуги</title>
+    <style>
+      body {
+        margin: 0;
+        background: #080b0f;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        color: #e8eef4;
+      }
+      .wrap {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      #cards {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      }
+      .card {
+        position: relative;
+        border: 1px solid #1e2d3d;
+        background: #0e141b;
+        border-radius: 12px;
+        padding: 24px 20px;
+        display: flex;
+        flex-direction: column;
+      }
+      .card.green {
+        border-color: #39ff6e50;
+      }
+      .badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 4px 14px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+      .badge.green {
+        background: #39ff6e;
+        color: #08100a;
+      }
+      .badge.blue {
+        background: #4aa8ff;
+        color: #fff;
+      }
+      .label {
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        color: #4a6070;
+        text-transform: uppercase;
+      }
+      .price {
+        font-size: 26px;
+        font-weight: 900;
+        color: #e8eef4;
+        margin: 14px 0 2px;
+      }
+      .price.green {
+        color: #39ff6e;
+      }
+      .price.blue {
+        color: #4aa8ff;
+      }
+      .per {
+        font-size: 12px;
+        color: #4a6070;
+      }
+      .desc {
+        font-size: 13px;
+        color: #7a9ab0;
+        line-height: 1.7;
+        margin: 14px 0 16px;
+      }
+      ul {
+        margin: 0 0 18px;
+        padding: 0;
+        list-style: none;
+      }
+      li {
+        font-size: 13px;
+        color: #b0c8d8;
+        padding: 4px 0 4px 26px;
+        position: relative;
+      }
+      li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 15px;
+        height: 15px;
+        border: 1px solid #39ff6e;
+        border-radius: 50%;
+        color: #39ff6e;
+        font-size: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      a.btn {
+        display: block;
+        margin-top: auto;
+        text-align: center;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #2e4050;
+        color: #b0c8d8;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      a.btn.green {
+        background: #39ff6e;
+        border-color: #39ff6e;
+        color: #08100a;
+      }
+      a.btn.blue {
+        background: #4aa8ff;
+        border-color: #4aa8ff;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div id="cards"></div>
+    </div>
+    <script src="/vk-bridge.js"></script>
+    <script>
+      (function () {
+        function init() {
+          if (window.vkBridge) {
+            vkBridge.send("VKWebAppInit").catch(function () {});
+          } else {
+            try {
+              window.parent.postMessage(
+                { type: "VKWebAppInit", data: {} },
+                "*",
+              );
+            } catch (e) {}
+          }
+        }
+        if (document.readyState === "complete") init();
+        else window.addEventListener("load", init);
+      })();
+    </script>
+    <script>
+      fetch("/prices.json")
+        .then((r) => r.json())
+        .then((items) => {
+          document.getElementById("cards").innerHTML = items
+            .map(
+              (p) => `
+      <div class="card ${p.accent}">
+        ${p.badge ? `<div class="badge ${p.accent}">${p.badge}</div>` : ""}
+        <div class="label">${p.label}</div>
+        <div class="price ${p.accent}">${p.price}</div>
+        <div class="per">/ разово</div>
+        <p class="desc">${p.desc}</p>
+        <ul>${p.features.map((f) => `<li>${f}</li>`).join("")}</ul>
+        <a class="btn ${p.accent}" href="https://www.vortex-studio.ru/#тарифы" target="_blank">Выбрать</a>
+      </div>`,
+            )
+            .join("");
+        });
+    </script>
+  </body>
+</html>

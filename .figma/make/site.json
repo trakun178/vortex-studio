@@ -1,0 +1,10 @@
+{
+  "description": "AI-студия VORTEX: лендинги, корпоративные сайты, порталы и Telegram-боты под ключ. Прозрачные цены, запуск от 3 дней, поддержка по подписке.",
+  "robots": {
+    "index": true
+  },
+  "accessibility": {
+    "addBypassLinks": true,
+    "ignoreReducedMotion": false
+  }
+}
