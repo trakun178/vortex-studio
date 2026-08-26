@@ -245,6 +245,27 @@
       <div class="msg" id="adminMsg"></div>
     </div>
 
+    <button
+      id="openBuilder"
+      style="
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--dim);
+        font-size: 10.5px;
+        border-radius: 6px;
+        padding: 6px 10px;
+        cursor: pointer;
+        margin-left: 6px;
+      "
+    >
+      🛠 Конструктор
+    </button>
+    <script>
+      document.getElementById("openBuilder").onclick = function () {
+        location.href = "/builder.html";
+      };
+    </script>
+
     <script src="/vk-bridge.js"></script>
     <script>
       (function () {
