@@ -3,182 +3,215 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>VORTEX.studio — услуги</title>
+    <title>VORTEX.studio — услуги и цены</title>
     <style>
-      body {
+      * {
         margin: 0;
-        background: #080b0f;
+        padding: 0;
+        box-sizing: border-box;
         font-family:
           system-ui,
           -apple-system,
           "Segoe UI",
           Roboto,
           sans-serif;
+      }
+      html,
+      body {
+        background: #080b0f;
         color: #e8eef4;
       }
       .wrap {
-        padding: 20px;
-        max-width: 1200px;
+        padding: 16px;
+        max-width: 960px;
         margin: 0 auto;
       }
-      #cards {
+      .hello {
+        font-size: 16px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+      .sub {
+        color: #7a9ab0;
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+      .grid {
         display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      @media (max-width: 640px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
       }
       .card {
-        position: relative;
+        background: #0e1318;
         border: 1px solid #1e2d3d;
-        background: #0e141b;
-        border-radius: 12px;
-        padding: 24px 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
         display: flex;
         flex-direction: column;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
       }
-      .card.green {
-        border-color: #39ff6e50;
+      .card:hover {
+        border-color: #39ff6e;
+        transform: translateY(-2px);
       }
-      .badge {
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 4px 14px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        white-space: nowrap;
-      }
-      .badge.green {
-        background: #39ff6e;
-        color: #08100a;
-      }
-      .badge.blue {
-        background: #4aa8ff;
-        color: #fff;
-      }
-      .label {
-        font-family: ui-monospace, Consolas, monospace;
-        font-size: 11px;
-        letter-spacing: 0.15em;
-        color: #4a6070;
-        text-transform: uppercase;
-      }
-      .price {
-        font-size: 26px;
-        font-weight: 900;
-        color: #e8eef4;
-        margin: 14px 0 2px;
-      }
-      .price.green {
-        color: #39ff6e;
-      }
-      .price.blue {
-        color: #4aa8ff;
-      }
-      .per {
-        font-size: 12px;
-        color: #4a6070;
-      }
-      .desc {
-        font-size: 13px;
-        color: #7a9ab0;
-        line-height: 1.7;
-        margin: 14px 0 16px;
-      }
-      ul {
-        margin: 0 0 18px;
-        padding: 0;
-        list-style: none;
-      }
-      li {
-        font-size: 13px;
-        color: #b0c8d8;
-        padding: 4px 0 4px 26px;
-        position: relative;
-      }
-      li::before {
-        content: "✓";
-        position: absolute;
-        left: 0;
-        top: 6px;
-        width: 15px;
-        height: 15px;
-        border: 1px solid #39ff6e;
-        border-radius: 50%;
-        color: #39ff6e;
-        font-size: 9px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      a.btn {
+      .card img {
+        width: 100%;
+        height: 90px;
+        object-fit: cover;
         display: block;
-        margin-top: auto;
+      }
+      .card .b {
+        padding: 10px 12px 12px;
+      }
+      .card h3 {
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+      .card .p {
+        color: #39ff6e;
+        font-weight: 900;
+        font-size: 15px;
+        margin-bottom: 6px;
+      }
+      .card .d {
+        color: #7a9ab0;
+        font-size: 11px;
+        line-height: 1.4;
+        margin-bottom: 8px;
+      }
+      .btn {
+        display: block;
         text-align: center;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #2e4050;
-        color: #b0c8d8;
+        background: #39ff6e;
+        color: #080b0f;
+        font-size: 12px;
+        font-weight: 800;
+        border-radius: 6px;
+        padding: 6px 0;
+      }
+      .more {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+        color: #39ff6e;
+        font-size: 12px;
         font-weight: 700;
-        font-size: 14px;
         text-decoration: none;
       }
-      a.btn.green {
-        background: #39ff6e;
-        border-color: #39ff6e;
-        color: #08100a;
+      .admin {
+        display: block;
+        margin: 14px auto 0;
+        background: #1e2d3d;
+        color: #7a9ab0;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 11px;
+        cursor: pointer;
       }
-      a.btn.blue {
-        background: #4aa8ff;
-        border-color: #4aa8ff;
-        color: #fff;
+      .admin:hover {
+        color: #e8eef4;
       }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <div id="cards"></div>
+      <p class="hello" id="hello">Добрый день!</p>
+      <p class="sub">
+        VORTEX.studio — AI-студия: сайты, порталы и Telegram-боты под ключ.
+      </p>
+
+      <div class="grid">
+        <a
+          class="card"
+          href="https://vortex-studio.ru/brief.html?service=landing"
+          target="_blank"
+        >
+          <img src="https://vortex-studio.ru/covers/cover1.png" alt="" />
+          <div class="b">
+            <h3>Лендинг</h3>
+            <div class="p">15 000 ₽</div>
+            <div class="d">Продающий сайт под ключ, запуск от 7 дней</div>
+            <span class="btn">Выбрать</span>
+          </div>
+        </a>
+        <a
+          class="card"
+          href="https://vortex-studio.ru/brief.html?service=corporate"
+          target="_blank"
+        >
+          <img src="https://vortex-studio.ru/covers/cover3.png" alt="" />
+          <div class="b">
+            <h3>Корпоративный</h3>
+            <div class="p">60 000 ₽</div>
+            <div class="d">До 20 страниц, CMS-панель, мультиязычность</div>
+            <span class="btn">Выбрать</span>
+          </div>
+        </a>
+        <a
+          class="card"
+          href="https://vortex-studio.ru/brief.html?service=bot"
+          target="_blank"
+        >
+          <img src="https://vortex-studio.ru/covers/cover5.png" alt="" />
+          <div class="b">
+            <h3>Telegram-бот</h3>
+            <div class="p">35 000 ₽</div>
+            <div class="d">Заказы, автоответы, рассылки и оплата в чате</div>
+            <span class="btn">Выбрать</span>
+          </div>
+        </a>
+      </div>
+
+      <a class="more" href="https://vortex-studio.ru/#тарифы" target="_blank"
+        >Все услуги и цены →</a
+      >
+      <button class="admin" id="addWidget">
+        📌 Вывести виджет на стену группы (админ)
+      </button>
     </div>
+
     <script src="/vk-bridge.js"></script>
     <script>
       (function () {
-        function init() {
-          if (window.vkBridge) {
-            vkBridge.send("VKWebAppInit").catch(function () {});
-          } else {
+        if (!window.vkBridge) return;
+        vkBridge.send("VKWebAppInit").catch(function () {});
+        vkBridge
+          .send("VKWebAppGetUserInfo")
+          .then(function (u) {
+            if (u && u.first_name) {
+              document.getElementById("hello").textContent =
+                "Добрый день, " + u.first_name + "!";
+            }
+          })
+          .catch(function () {});
+
+        document
+          .getElementById("addWidget")
+          .addEventListener("click", async function () {
             try {
-              window.parent.postMessage(
-                { type: "VKWebAppInit", data: {} },
-                "*",
+              var r = await vkBridge.send(
+                "VKWebAppShowCommunityWidgetPreviewBox",
+                {
+                  community_id: 232319212,
+                },
               );
-            } catch (e) {}
-          }
-        }
-        if (document.readyState === "complete") init();
-        else window.addEventListener("load", init);
+              alert("✅ VK ответил: " + JSON.stringify(r));
+            } catch (e) {
+              alert("⚠️ VK: " + JSON.stringify(e));
+            }
+          });
       })();
-    </script>
-    <script>
-      fetch("/prices.json")
-        .then((r) => r.json())
-        .then((items) => {
-          document.getElementById("cards").innerHTML = items
-            .map(
-              (p) => `
-      <div class="card ${p.accent}">
-        ${p.badge ? `<div class="badge ${p.accent}">${p.badge}</div>` : ""}
-        <div class="label">${p.label}</div>
-        <div class="price ${p.accent}">${p.price}</div>
-        <div class="per">/ разово</div>
-        <p class="desc">${p.desc}</p>
-        <ul>${p.features.map((f) => `<li>${f}</li>`).join("")}</ul>
-        <a class="btn ${p.accent}" href="https://www.vortex-studio.ru/#тарифы" target="_blank">Выбрать</a>
-      </div>`,
-            )
-            .join("");
-        });
     </script>
   </body>
 </html>
