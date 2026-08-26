@@ -310,27 +310,24 @@
         var WIDGET_CODE =
           "var u = API.users.get()[0];" +
           "return {" +
-          '"title": "Добрый день, " + u.first_name + "!",' +
-          '"title_url": "' +
-          APP_URL +
-          '",' +
-          '"tiles": [' +
-          '{"title":"Лендинг · 15 000 ₽","descr":"Продающий сайт, запуск от 7 дней","link":"Выбрать","link_url":"' +
+          '"title": "Добрый день, " + u.first_name + "! VORTEX.studio",' +
+          '"rows": [' +
+          '{"title":"Лендинг · 15 000 ₽","descr":"Продающий сайт, запуск от 7 дней","button":"Выбрать","button_url":"' +
           APP_URL +
           '#go=landing","url":"' +
           APP_URL +
           '#go=landing"},' +
-          '{"title":"Корпоративный · 60 000 ₽","descr":"До 20 страниц, CMS, мультиязычность","link":"Выбрать","link_url":"' +
+          '{"title":"Корпоративный · 60 000 ₽","descr":"До 20 страниц, CMS, мультиязычность","button":"Выбрать","button_url":"' +
           APP_URL +
           '#go=corporate","url":"' +
           APP_URL +
           '#go=corporate"},' +
-          '{"title":"Портал · от 150 000 ₽","descr":"Личный кабинет, API, роли, DevOps","link":"Выбрать","link_url":"' +
+          '{"title":"Портал · от 150 000 ₽","descr":"Личный кабинет, API, роли, DevOps","button":"Выбрать","button_url":"' +
           APP_URL +
           '#go=portal","url":"' +
           APP_URL +
           '#go=portal"},' +
-          '{"title":"Telegram-бот · 35 000 ₽","descr":"Заказы, автоответы, оплата в чате","link":"Выбрать","link_url":"' +
+          '{"title":"Telegram-бот · 35 000 ₽","descr":"Заказы, автоответы, оплата в чате","button":"Выбрать","button_url":"' +
           APP_URL +
           '#go=bot","url":"' +
           APP_URL +
@@ -351,7 +348,7 @@
               bridge
                 .send("VKWebAppShowCommunityWidgetPreviewBox", {
                   group_id: GROUP_ID,
-                  type: "tiles",
+                  type: "list",
                   code: WIDGET_CODE,
                 })
                 .then(function (r) {
