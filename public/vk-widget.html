@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VORTEX.studio — услуги и цены</title>
     <style>
+      :root {
+        --g: #39ff6e;
+        --bg: #080b0f;
+        --card: #0e1318;
+        --line: #1e2d3d;
+        --txt: #e8eef4;
+        --mut: #7a9ab0;
+        --dim: #4a6070;
+      }
       * {
         margin: 0;
         padding: 0;
@@ -16,15 +25,36 @@
           Roboto,
           sans-serif;
       }
-      html,
       body {
-        background: #080b0f;
-        color: #e8eef4;
+        background: var(--bg);
+        color: var(--txt);
+        padding: 16px 14px 22px;
       }
-      .wrap {
-        padding: 16px;
-        max-width: 960px;
-        margin: 0 auto;
+      .head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: var(--g);
+        color: #08100a;
+        font-weight: 900;
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        font-size: 15px;
+      }
+      .brand b {
+        color: var(--g);
       }
       .hello {
         font-size: 16px;
@@ -32,69 +62,68 @@
         margin-bottom: 4px;
       }
       .sub {
-        color: #7a9ab0;
+        color: var(--mut);
         font-size: 12px;
         margin-bottom: 14px;
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 10px;
       }
-      @media (max-width: 640px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
       .card {
-        background: #0e1318;
-        border: 1px solid #1e2d3d;
+        display: flex;
+        flex-direction: column;
+        background: var(--card);
+        border: 1px solid var(--line);
         border-radius: 10px;
         overflow: hidden;
         text-decoration: none;
         color: inherit;
-        display: flex;
-        flex-direction: column;
         transition:
           border-color 0.2s,
           transform 0.2s;
       }
       .card:hover {
-        border-color: #39ff6e;
+        border-color: var(--g);
         transform: translateY(-2px);
       }
       .card img {
         width: 100%;
-        height: 90px;
+        height: 84px;
         object-fit: cover;
         display: block;
       }
       .card .b {
-        padding: 10px 12px 12px;
+        padding: 10px 10px 12px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
       }
       .card h3 {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 800;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
       }
       .card .p {
-        color: #39ff6e;
+        color: var(--g);
         font-weight: 900;
         font-size: 15px;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
       }
       .card .d {
-        color: #7a9ab0;
-        font-size: 11px;
-        line-height: 1.4;
-        margin-bottom: 8px;
+        color: var(--mut);
+        font-size: 10.5px;
+        line-height: 1.45;
+        margin-bottom: 9px;
+        flex: 1;
       }
       .btn {
         display: block;
         text-align: center;
-        background: #39ff6e;
-        color: #080b0f;
-        font-size: 12px;
+        background: var(--g);
+        color: #08100a;
+        font-size: 11.5px;
         font-weight: 800;
         border-radius: 6px;
         padding: 6px 0;
@@ -103,112 +132,241 @@
         display: block;
         text-align: center;
         margin-top: 12px;
-        color: #39ff6e;
+        color: var(--g);
         font-size: 12px;
         font-weight: 700;
         text-decoration: none;
       }
       .admin {
-        display: block;
-        margin: 14px auto 0;
-        background: #1e2d3d;
-        color: #7a9ab0;
-        border: none;
+        margin-top: 18px;
+        border-top: 1px dashed var(--line);
+        padding-top: 10px;
+        text-align: center;
+      }
+      .admin button {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--dim);
+        font-size: 10.5px;
         border-radius: 6px;
-        padding: 6px 12px;
-        font-size: 11px;
+        padding: 6px 10px;
         cursor: pointer;
       }
-      .admin:hover {
-        color: #e8eef4;
+      .admin button:hover {
+        color: var(--mut);
+        border-color: var(--mut);
+      }
+      .admin .msg {
+        margin-top: 6px;
+        font-size: 10.5px;
+        color: var(--mut);
+        word-break: break-word;
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <p class="hello" id="hello">Добрый день!</p>
-      <p class="sub">
-        VORTEX.studio — AI-студия: сайты, порталы и Telegram-боты под ключ.
-      </p>
+    <div class="head">
+      <div class="logo">V</div>
+      <div class="brand">VORTEX.<b>studio</b></div>
+    </div>
 
-      <div class="grid">
-        <a
-          class="card"
-          href="https://vortex-studio.ru/brief.html?service=landing"
-          target="_blank"
-        >
-          <img src="https://vortex-studio.ru/covers/cover1.png" alt="" />
-          <div class="b">
-            <h3>Лендинг</h3>
-            <div class="p">15 000 ₽</div>
-            <div class="d">Продающий сайт под ключ, запуск от 7 дней</div>
-            <span class="btn">Выбрать</span>
-          </div>
-        </a>
-        <a
-          class="card"
-          href="https://vortex-studio.ru/brief.html?service=corporate"
-          target="_blank"
-        >
-          <img src="https://vortex-studio.ru/covers/cover3.png" alt="" />
-          <div class="b">
-            <h3>Корпоративный</h3>
-            <div class="p">60 000 ₽</div>
-            <div class="d">До 20 страниц, CMS-панель, мультиязычность</div>
-            <span class="btn">Выбрать</span>
-          </div>
-        </a>
-        <a
-          class="card"
-          href="https://vortex-studio.ru/brief.html?service=bot"
-          target="_blank"
-        >
-          <img src="https://vortex-studio.ru/covers/cover5.png" alt="" />
-          <div class="b">
-            <h3>Telegram-бот</h3>
-            <div class="p">35 000 ₽</div>
-            <div class="d">Заказы, автоответы, рассылки и оплата в чате</div>
-            <span class="btn">Выбрать</span>
-          </div>
-        </a>
-      </div>
+    <p class="hello" id="hello">Добрый день!</p>
+    <p class="sub">AI-студия сайтов под ключ. Фикс-цены, запуск от 7 дней.</p>
 
-      <a class="more" href="https://vortex-studio.ru/#тарифы" target="_blank"
-        >Все услуги и цены →</a
+    <div class="grid" id="grid">
+      <a
+        class="card"
+        href="https://vortex-studio.ru/brief.html?service=landing"
+        target="_blank"
+        rel="noopener"
       >
-      <button class="admin" id="addWidget">
-        📌 Вывести виджет на стену группы (админ)
-      </button>
+        <img src="https://vortex-studio.ru/covers/cover1.png" alt="" />
+        <div class="b">
+          <h3>Лендинг</h3>
+          <div class="p">15 000 ₽</div>
+          <div class="d">Продающий сайт под ключ, запуск от 7 дней</div>
+          <span class="btn">Выбрать</span>
+        </div>
+      </a>
+      <a
+        class="card"
+        href="https://vortex-studio.ru/brief.html?service=corporate"
+        target="_blank"
+        rel="noopener"
+      >
+        <img src="https://vortex-studio.ru/covers/cover3.png" alt="" />
+        <div class="b">
+          <h3>Корпоративный</h3>
+          <div class="p">60 000 ₽</div>
+          <div class="d">До 20 страниц, CMS-панель, мультиязычность</div>
+          <span class="btn">Выбрать</span>
+        </div>
+      </a>
+      <a
+        class="card"
+        href="https://vortex-studio.ru/brief.html?service=portal"
+        target="_blank"
+        rel="noopener"
+      >
+        <img src="https://vortex-studio.ru/covers/cover4.png" alt="" />
+        <div class="b">
+          <h3>Портал</h3>
+          <div class="p">от 150 000 ₽</div>
+          <div class="d">Личный кабинет, API, роли, DevOps</div>
+          <span class="btn">Выбрать</span>
+        </div>
+      </a>
+      <a
+        class="card"
+        href="https://vortex-studio.ru/brief.html?service=bot"
+        target="_blank"
+        rel="noopener"
+      >
+        <img src="https://vortex-studio.ru/covers/cover5.png" alt="" />
+        <div class="b">
+          <h3>Telegram-бот</h3>
+          <div class="p">35 000 ₽</div>
+          <div class="d">Заказы, автоответы, рассылки, оплата в чате</div>
+          <span class="btn">Выбрать</span>
+        </div>
+      </a>
+    </div>
+
+    <a
+      class="more"
+      href="https://vortex-studio.ru/"
+      target="_blank"
+      rel="noopener"
+      >Все услуги и цены →</a
+    >
+
+    <div class="admin" id="admin">
+      <button id="addWidget">📌 Вывести витрину на стену (для админа)</button>
+      <div class="msg" id="adminMsg"></div>
     </div>
 
     <script src="/vk-bridge.js"></script>
     <script>
       (function () {
-        if (!window.vkBridge) return;
-        vkBridge.send("VKWebAppInit").catch(function () {});
-        vkBridge
-          .send("VKWebAppGetUserInfo")
-          .then(function (u) {
-            if (u && u.first_name) {
-              document.getElementById("hello").textContent =
-                "Добрый день, " + u.first_name + "!";
-            }
-          })
-          .catch(function () {});
+        var bridge = window.vkBridge || window.VKBridge || null;
+        var APP_URL = "https://vk.com/app547116803_-232319212";
+        var GROUP_ID = 232319212;
+
+        // 1) Открыты из плитки на стене (#go=…) — сразу уходим на бриф
+        var go =
+          (location.hash.match(/go=([a-z]+)/) || [])[1] ||
+          new URLSearchParams(location.search).get("go") ||
+          "";
+        if (go) {
+          document.getElementById("grid").style.display = "none";
+          location.replace("https://vortex-studio.ru/brief.html?service=" + go);
+          return;
+        }
+
+        // 2) Приветствие по времени суток + имя из VK
+        function greet(name) {
+          var h = new Date().getHours();
+          var t =
+            h >= 5 && h < 12
+              ? "Доброе утро"
+              : h < 18
+                ? "Добрый день"
+                : "Добрый вечер";
+          document.getElementById("hello").textContent = name
+            ? t + ", " + name + "!"
+            : t + "!";
+        }
+        greet("");
+
+        if (!bridge) {
+          document.getElementById("admin").style.display = "none";
+          return;
+        }
+
+        try {
+          bridge.send("VKWebAppInit").catch(function () {});
+        } catch (e) {}
+        try {
+          bridge
+            .send("VKWebAppSetViewSettings", {
+              status_bar_style: "light",
+              action_bar_color: "#080b0f",
+              navigation_bar_color: "#080b0f",
+            })
+            .catch(function () {});
+        } catch (e) {}
+        try {
+          bridge
+            .send("VKWebAppGetUserInfo")
+            .then(function (u) {
+              if (u && u.first_name) greet(u.first_name);
+            })
+            .catch(function () {});
+        } catch (e) {}
+
+        // 3) Код виджета на стену (VKScript): приветствие по имени + плитки услуг.
+        //    Ссылки — только внутренние vk.com (требование VK), ведут в наше приложение,
+        //    а оно по #go=… перенаправляет на бриф.
+        var WIDGET_CODE =
+          "var u = API.users.get()[0];" +
+          "return {" +
+          '"title": "Добрый день, " + u.first_name + "!",' +
+          '"title_url": "' +
+          APP_URL +
+          '",' +
+          '"tiles": [' +
+          '{"title":"Лендинг · 15 000 ₽","descr":"Продающий сайт, запуск от 7 дней","link":"Выбрать","link_url":"' +
+          APP_URL +
+          '#go=landing","url":"' +
+          APP_URL +
+          '#go=landing"},' +
+          '{"title":"Корпоративный · 60 000 ₽","descr":"До 20 страниц, CMS, мультиязычность","link":"Выбрать","link_url":"' +
+          APP_URL +
+          '#go=corporate","url":"' +
+          APP_URL +
+          '#go=corporate"},' +
+          '{"title":"Портал · от 150 000 ₽","descr":"Личный кабинет, API, роли, DevOps","link":"Выбрать","link_url":"' +
+          APP_URL +
+          '#go=portal","url":"' +
+          APP_URL +
+          '#go=portal"},' +
+          '{"title":"Telegram-бот · 35 000 ₽","descr":"Заказы, автоответы, оплата в чате","link":"Выбрать","link_url":"' +
+          APP_URL +
+          '#go=bot","url":"' +
+          APP_URL +
+          '#go=bot"}' +
+          "]," +
+          '"more": "Все услуги и цены",' +
+          '"more_url": "' +
+          APP_URL +
+          '"' +
+          "};";
 
         document
           .getElementById("addWidget")
-          .addEventListener("click", async function () {
+          .addEventListener("click", function () {
+            var msg = document.getElementById("adminMsg");
+            msg.textContent = "Отправляем превью в VK…";
             try {
-              var r = await vkBridge.send(
-                "VKWebAppShowCommunityWidgetPreviewBox",
-                {
-                  community_id: 232319212,
-                },
-              );
-              alert("✅ VK ответил: " + JSON.stringify(r));
+              bridge
+                .send("VKWebAppShowCommunityWidgetPreviewBox", {
+                  group_id: GROUP_ID,
+                  type: "tiles",
+                  code: WIDGET_CODE,
+                })
+                .then(function (r) {
+                  msg.textContent =
+                    "✅ Превью показано (result=" +
+                    (r && r.result) +
+                    "). Подтвердите установку — и витрина встанет на стену.";
+                })
+                .catch(function (e) {
+                  msg.textContent =
+                    "⚠️ VK: " +
+                    (e && e.error_msg ? e.error_msg : JSON.stringify(e));
+                });
             } catch (e) {
-              alert("⚠️ VK: " + JSON.stringify(e));
+              msg.textContent = "⚠️ " + e;
             }
           });
       })();
