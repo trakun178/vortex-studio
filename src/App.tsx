@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 // Бэкенд (Google Apps Script): заявки, чат, брифы
 const API_HOOK =
-  "https://script.google.com/macros/s/AKfycby4DzKTWZIwHI5SwRGBUtBhlP1reXwr6dzKYAzoMsk3vl4IueLFExNMyYImAfkiS0R5/exec";
+  "https://script.google.com/macros/s/AKfycbxFmERVW3rVaprkDZHKfx9AQZIcrVJYUZgTJRXEevqsW9HLggqJaDz4-D4PBwQsxbVc/exec";
 
 // ── Data ───────────────────────────────────────────────────────────────────
 
@@ -1471,13 +1471,13 @@ function FloatingContact() {
                 <input
                   value={msg}
                   onChange={(e) => setMsg(e.target.value)}
-                  onFocus={(e) =>
+                  onFocus={(e) => {
+                    const el = e.target as HTMLInputElement;
                     setTimeout(
-                      () =>
-                        e.currentTarget.scrollIntoView({ block: "nearest" }),
+                      () => el.scrollIntoView({ block: "nearest" }),
                       300,
-                    )
-                  }
+                    );
+                  }}
                   placeholder="Сообщение..."
                   className="flex-1 bg-[#141c24] border border-[#1e2d3d] rounded-lg px-3 py-2 text-sm text-[#e8eef4] placeholder:text-[#2e4050] focus:outline-none focus:border-[#39ff6e50] transition-colors"
                 />
