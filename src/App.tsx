@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 // Бэкенд (Google Apps Script): заявки, чат, брифы
 const API_HOOK =
-  "https://script.google.com/macros/s/AKfycbxFmERVW3rVaprkDZHKfx9AQZIcrVJYUZgTJRXEevqsW9HLggqJaDz4-D4PBwQsxbVc/exec";
+  "https://script.google.com/macros/s/AKfycbxEJymh4AhHWhrp9AhvZuXqt-AikkntLYdmxqleBQ9XwwU-00A7hTqOMTLFFapEGqcc/exec";
 
 // ── Data ───────────────────────────────────────────────────────────────────
 
