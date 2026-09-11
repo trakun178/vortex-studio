@@ -1290,8 +1290,86 @@ function FloatingContact() {
     { id: number; sender: string; text: string }[]
   >([]);
   const boxRef = useRef<HTMLDivElement>(null);
-
   const hasVisitorMsg = messages.some((m) => m.sender === "visitor");
+
+  // ── НОВОЕ: ротация иконок в FAB каждые 5 секунд ──
+  const [iconIdx, setIconIdx] = useState(0);
+  const [iconFading, setIconFading] = useState(false);
+  const FAB_ICONS = [
+    {
+      key: "chat",
+      color: "#39ff6e",
+      svg: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M21 12c0 4.4-4 8-9 8-1 0-2-.1-2.9-.4L4 21l1.6-3.1C4.6 16.6 4 14.4 4 12c0-4.4 4-8 9-8s8 3.6 8 8Z"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+    },
+    {
+      key: "tg",
+      color: "#229ed9",
+      svg: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.9 8.2-2 9.3c-.1.7-.5.8-1.1.5l-3-2.2-1.4 1.4c-.2.2-.3.3-.6.3l.2-3.1 5.6-5c.2-.2 0-.3-.4-.1l-6.9 4.3-3-.9c-.6-.2-.6-.6.1-.9l11.6-4.5c.5-.2 1 .1.9.9z" />
+        </svg>
+      ),
+    },
+    {
+      key: "vk",
+      color: "#0077ff",
+      svg: <span className="text-[11px] font-black">VK</span>,
+    },
+    {
+      key: "phone",
+      color: "#7c6cfa",
+      svg: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.6 10.8c1.4 2.7 3.9 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z" />
+        </svg>
+      ),
+    },
+    {
+      key: "mail",
+      color: "#ff6b9d",
+      svg: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="3"
+            y="5"
+            width="18"
+            height="14"
+            rx="2"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path
+            d="M3 7l9 6 9-6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      ),
+    },
+  ];
+
+  // Цикл иконок — только когда меню закрыто
+  useEffect(() => {
+    if (open) return;
+    const id = setInterval(() => {
+      setIconFading(true);
+      setTimeout(() => {
+        setIconIdx((i) => (i + 1) % FAB_ICONS.length);
+        setIconFading(false);
+      }, 250);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [open]);
 
   function getVisitor() {
     let v = localStorage.getItem("vortex_visitor");
@@ -1302,7 +1380,7 @@ function FloatingContact() {
     return v;
   }
 
-  // Раз в 30 секунд быстрый оборот — пока всё закрыто
+  // Раз в 30 секунд спин — только когда всё закрыто
   useEffect(() => {
     if (open || chatOpen) return;
     const id = setInterval(() => {
@@ -1312,7 +1390,7 @@ function FloatingContact() {
     return () => clearInterval(id);
   }, [open, chatOpen]);
 
-  // Опрос диалога каждые 5 секунд, пока открыт чат
+  // Опрос диалога каждые 5 секунд
   useEffect(() => {
     if (!chatOpen) return;
     const load = async () => {
@@ -1363,6 +1441,7 @@ function FloatingContact() {
 
   const show = "opacity-100 translate-y-0";
   const hide = "opacity-0 translate-y-3 pointer-events-none";
+  const current = FAB_ICONS[iconIdx];
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
@@ -1417,7 +1496,7 @@ function FloatingContact() {
           <div className="p-4 space-y-3 flex flex-col min-h-0 flex-1">
             <div
               ref={boxRef}
-              className="rounded-lg border border-[#1e2d3d] bg-[#0a0e14] p-3 overflow-y-auto space-y-3 flex-1 min-h-0  break-words [overflow-wrap:anywhere]"
+              className="rounded-lg border border-[#1e2d3d] bg-[#0a0e14] p-3 overflow-y-auto space-y-3 flex-1 min-h-0 break-words [overflow-wrap:anywhere]"
             >
               <div>
                 <p
@@ -1450,14 +1529,12 @@ function FloatingContact() {
                 </div>
               ))}
             </div>
-
             {state === "error" && (
               <div className="rounded-lg bg-[#1a0e0e] border border-[#ff5f5640] px-3 py-2 text-sm text-[#ff5f56] shrink-0">
                 Не отправилось. Попробуй ещё раз или позвони — кружки связи на
                 сайте.
               </div>
             )}
-
             <form onSubmit={send} className="space-y-2 shrink-0">
               {!hasVisitorMsg && (
                 <input
@@ -1493,7 +1570,6 @@ function FloatingContact() {
           </div>
         </div>
       )}
-
       {!chatOpen && (
         <>
           <button
@@ -1523,7 +1599,6 @@ function FloatingContact() {
               </svg>
             </span>
           </button>
-
           <a
             href="https://t.me/vortexstudio_ru?direct"
             target="_blank"
@@ -1550,7 +1625,6 @@ function FloatingContact() {
               </svg>
             </span>
           </a>
-
           <a
             href="https://vk.ru/im?sel=-232319212"
             target="_blank"
@@ -1570,7 +1644,6 @@ function FloatingContact() {
               <span className="text-[11px] font-black">VK</span>
             </span>
           </a>
-
           <a
             href="tel:+79490983532"
             className={`flex items-center gap-2 transition-all duration-300 ${open ? show : hide}`}
@@ -1595,7 +1668,6 @@ function FloatingContact() {
               </svg>
             </span>
           </a>
-
           <div className="relative">
             {!open && (
               <span className="absolute inline-flex h-full w-full rounded-full bg-[#39ff6e] opacity-30 animate-ping" />
@@ -1603,7 +1675,8 @@ function FloatingContact() {
             <button
               onClick={() => setOpen(!open)}
               aria-label="Способы связи"
-              className={`${spin ? "fab-spin " : ""}relative w-14 h-14 rounded-full bg-[#39ff6e] text-[#080b0f] flex items-center justify-center shadow-[0_0_25px_#39ff6e50] hover:shadow-[0_0_40px_#39ff6e90] hover:scale-110 hover:bg-[#5aff8a] transition-all duration-300`}
+              className={`${spin ? "fab-spin" : ""} relative w-14 h-14 rounded-full bg-[#39ff6e] text-[#080b0f] flex items-center justify-center shadow-[0_0_25px_#39ff6e50] hover:shadow-[0_0_40px_#39ff6e90] hover:scale-110 hover:bg-[#5aff8a] transition-all duration-300`}
+              style={{ color: current.color }}
             >
               {open ? (
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -1627,14 +1700,12 @@ function FloatingContact() {
                   />
                 </svg>
               ) : (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M21 12c0 4.4-4 8-9 8-1 0-2-.1-2.9-.4L4 21l1.6-3.1C4.6 16.6 4 14.4 4 12c0-4.4 4-8 9-8s8 3.6 8 8Z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <span
+                  className="inline-flex items-center justify-center transition-opacity duration-250"
+                  style={{ opacity: iconFading ? 0 : 1 }}
+                >
+                  {current.svg}
+                </span>
               )}
             </button>
           </div>
