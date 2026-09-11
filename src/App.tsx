@@ -1333,29 +1333,6 @@ function FloatingContact() {
         </svg>
       ),
     },
-    {
-      key: "mail",
-      color: "#ff6b9d",
-      svg: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <rect
-            x="3"
-            y="5"
-            width="18"
-            height="14"
-            rx="2"
-            stroke="currentColor"
-            strokeWidth="2"
-          />
-          <path
-            d="M3 7l9 6 9-6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      ),
-    },
   ];
 
   // Цикл иконок — только когда меню закрыто
@@ -1670,13 +1647,20 @@ function FloatingContact() {
           </a>
           <div className="relative">
             {!open && (
-              <span className="absolute inline-flex h-full w-full rounded-full bg-[#39ff6e] opacity-30 animate-ping" />
+              <span
+                className="absolute inline-flex h-full w-full rounded-full opacity-30 animate-ping"
+                style={{ background: current.color }}
+              />
             )}
             <button
               onClick={() => setOpen(!open)}
               aria-label="Способы связи"
-              className={`${spin ? "fab-spin" : ""} relative w-14 h-14 rounded-full bg-[#39ff6e] text-[#080b0f] flex items-center justify-center shadow-[0_0_25px_#39ff6e50] hover:shadow-[0_0_40px_#39ff6e90] hover:scale-110 hover:bg-[#5aff8a] transition-all duration-300`}
-              style={{ color: current.color }}
+              className={`${spin ? "fab-spin" : ""} relative w-14 h-14 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
+              style={{
+                background: open ? "#39ff6e" : current.color,
+                color: "#080b0f",
+                boxShadow: `0 0 25px ${current.color}50`,
+              }}
             >
               {open ? (
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -1701,7 +1685,7 @@ function FloatingContact() {
                 </svg>
               ) : (
                 <span
-                  className="inline-flex items-center justify-center transition-opacity duration-250"
+                  className="inline-flex items-center justify-center transition-opacity duration-200"
                   style={{ opacity: iconFading ? 0 : 1 }}
                 >
                   {current.svg}
