@@ -170,12 +170,33 @@
         color: var(--dim);
         font-size: 10px;
       }
-      #builder select {
-        background: #141c24;
+      .tpls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin: 8px 0;
+      }
+      .tpl {
         border: 1px solid var(--line);
-        border-radius: 6px;
-        color: var(--txt);
+        border-radius: 8px;
         padding: 6px;
+        cursor: pointer;
+        background: #0e1318;
+      }
+      .tpl.on {
+        border-color: var(--g);
+        background: #0e1a10;
+      }
+      .tpl .nm {
+        font-size: 9.5px;
+        font-weight: 800;
+        color: var(--txt);
+        margin-top: 4px;
+      }
+      .tpl .hn {
+        font-size: 8.5px;
+        color: var(--dim);
+        line-height: 1.3;
       }
       #builder .act {
         margin-top: 8px;
@@ -273,25 +294,21 @@
     >
 
     <div class="admin" id="admin" style="display: none">
-      <button id="addWidget">📌 Вывести витрину на стену</button>
+      <button id="addWidget">📌 Установить витрину</button>
       <button id="toggleBuilder">🛠 Конструктор</button>
       <div class="msg" id="adminMsg"></div>
 
       <div id="builder">
-        <h4>🛠 Конструктор виджета «Витрина»</h4>
-        <small>Расположение</small>
-        <select id="bType">
-          <option value="list">Вертикально (список)</option>
-          <option value="tiles">Горизонтально (плитки)</option>
-        </select>
-        <label style="margin-left: 10px; font-size: 11px; color: var(--mut)"
-          ><input type="checkbox" id="bHello" checked /> приветствие по
-          имени</label
+        <h4>🛠 Конструктор витрин — выбери образец</h4>
+        <div class="tpls" id="tpls"></div>
+        <label style="font-size: 11px; color: var(--mut)"
+          ><input type="checkbox" id="bHello" checked /> приветствие по имени
+          посетителя</label
         >
         <div id="bRows" style="margin-top: 10px"></div>
         <div class="act">
           <button class="ghost" id="bAdd">+ Строка</button>
-          <button class="ghost" id="bPhotos">📷 Фото</button>
+          <button class="ghost" id="bPhotos">📷 Фото (по строкам)</button>
           <input
             type="file"
             id="bFile"
@@ -301,8 +318,8 @@
           />
         </div>
         <div class="act">
-          <button id="bInstall">📦 Установить виджет</button>
-          <button id="bUpdate">🔄 Обновить установленный</button>
+          <button id="bInstall">📦 Установить витрину</button>
+          <button id="bUpdate">🔄 Обновить установленную</button>
         </div>
         <div class="msg" id="bStatus"></div>
       </div>
@@ -315,7 +332,6 @@
         var APP_URL = "https://vk.com/app547116803_-232319212";
         var GROUP_ID = 232319212;
 
-        // Открыты из плитки на стене — сразу на бриф
         var go =
           (location.hash.match(/go=([a-z]+)/) || [])[1] ||
           new URLSearchParams(location.search).get("go") ||
@@ -341,10 +357,75 @@
         greet("");
         if (!bridge) return;
 
-        // ─────────── Конструктор: данные ───────────
+        // ── Образцы витрин ──
+        var R =
+          '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px;border-radius:2px;background:#39ff6e"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
+        var RN =
+          '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
+        var TPLS = [
+          {
+            id: "list_photo",
+            type: "list",
+            name: "Список с фото",
+            hint: "вертикально: фото, описание, кнопка",
+            icons: true,
+            prev: R + R + R,
+          },
+          {
+            id: "list",
+            type: "list",
+            name: "Список",
+            hint: "вертикально, без фото",
+            icons: false,
+            prev: RN + RN + RN,
+          },
+          {
+            id: "tiles",
+            type: "tiles",
+            name: "Плитки",
+            hint: "горизонтальная сетка с фото",
+            icons: true,
+            prev: '<div style="display:flex;gap:3px;margin:3px 0"><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span></div><div style="display:flex;gap:3px;margin:3px 0"><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span></div>',
+          },
+          {
+            id: "cover_list",
+            type: "cover_list",
+            name: "Обложка+список",
+            hint: "большое фото сверху, строки ниже",
+            icons: false,
+            cover: true,
+            prev:
+              '<div style="height:12px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50;margin:3px 0"></div>' +
+              RN +
+              RN,
+          },
+          {
+            id: "compact",
+            type: "compact_list",
+            name: "Компактный",
+            hint: "тонкие строки",
+            icons: false,
+            prev: '<div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div><div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div><div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div>',
+          },
+          {
+            id: "text",
+            type: "text",
+            name: "Текст",
+            hint: "текстовый блок услуг",
+            icons: false,
+            prev: '<div style="height:3px;background:#39ff6e;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div>',
+          },
+        ];
+        function tpl() {
+          for (var i = 0; i < TPLS.length; i++)
+            if (TPLS[i].id === CFG.tpl) return TPLS[i];
+          return TPLS[0];
+        }
+
         var DEF = {
-          type: "list",
+          tpl: "list_photo",
           hello: true,
+          cover: "",
           rows: [
             {
               t: "Лендинг · 15 000 ₽",
@@ -398,14 +479,21 @@
         function aSt(t) {
           document.getElementById("adminMsg").textContent = t;
         }
+        function friendly(e) {
+          var s = JSON.stringify(e);
+          if (/app_id/.test(s))
+            return "⚠️ Открой приложение ИЗ ГРУППЫ (плитка в сообществе): из превью dev-кабинета токен сообщества не выдаётся. Затем кнопки заработают.";
+          return "⚠️ " + s;
+        }
 
         function buildCode() {
+          var t = tpl();
           var head = CFG.hello
             ? 'var u = API.users.get()[0]; var head = "Добрый день, " + u.first_name + "! VORTEX.studio";'
             : 'var head = "VORTEX.studio — услуги и цены";';
           var items = CFG.rows
             .map(function (r) {
-              if (CFG.type === "tiles")
+              if (t.id === "tiles")
                 return (
                   '{"title":"' +
                   esc(r.t) +
@@ -419,6 +507,34 @@
                   esc(r.u) +
                   '","icon_id":"' +
                   esc(r.icon) +
+                  '"}'
+                );
+              if (t.id === "list_photo")
+                return (
+                  '{"title":"' +
+                  esc(r.t) +
+                  '","descr":"' +
+                  esc(r.d) +
+                  '","button":"' +
+                  esc(r.b) +
+                  '","button_url":"' +
+                  esc(r.u) +
+                  '","url":"' +
+                  esc(r.u) +
+                  '"' +
+                  (r.icon ? ',"icon_id":"' + esc(r.icon) + '"' : "") +
+                  "}"
+                );
+              if (t.id === "compact")
+                return (
+                  '{"title":"' +
+                  esc(r.t) +
+                  '","button":"' +
+                  esc(r.b) +
+                  '","button_url":"' +
+                  esc(r.u) +
+                  '","url":"' +
+                  esc(r.u) +
                   '"}'
                 );
               return (
@@ -436,7 +552,34 @@
               );
             })
             .join(",");
-          var key = CFG.type === "tiles" ? "tiles" : "rows";
+          if (t.id === "text") {
+            var txt = CFG.rows
+              .map(function (r) {
+                return esc(r.t) + " — " + esc(r.d);
+              })
+              .join("\\n");
+            return (
+              head +
+              'return {"title": head, "text": "' +
+              txt +
+              '", "link": "Все услуги и цены", "link_url": "' +
+              APP_URL +
+              '"};'
+            );
+          }
+          if (t.id === "cover_list") {
+            return (
+              head +
+              'return {"title": head, "cover_id": "' +
+              esc(CFG.cover) +
+              '", "rows": [' +
+              items +
+              '], "more": "Все услуги и цены", "more_url": "' +
+              APP_URL +
+              '"};'
+            );
+          }
+          var key = t.id === "tiles" ? "tiles" : "rows";
           return (
             head +
             'return {"title": head, "' +
@@ -463,6 +606,28 @@
             });
         }
 
+        function renderTpls() {
+          var box = document.getElementById("tpls");
+          box.innerHTML = "";
+          TPLS.forEach(function (t) {
+            var d = document.createElement("div");
+            d.className = "tpl" + (t.id === CFG.tpl ? " on" : "");
+            d.innerHTML =
+              '<div style="background:#0a0e14;border-radius:4px;padding:4px">' +
+              t.prev +
+              '</div><div class="nm">' +
+              t.name +
+              '</div><div class="hn">' +
+              t.hint +
+              "</div>";
+            d.onclick = function () {
+              CFG.tpl = t.id;
+              saveCfg();
+              renderTpls();
+            };
+            box.appendChild(d);
+          });
+        }
         function renderRows() {
           var box = document.getElementById("bRows");
           box.innerHTML = "";
@@ -502,12 +667,32 @@
         }
 
         function install() {
+          var t = tpl();
+          if (t.icons) {
+            var miss = CFG.rows.some(function (r) {
+              return !r.icon;
+            });
+            if (miss) {
+              bSt(
+                "⚠️ Для «" +
+                  t.name +
+                  "» нужны фото у всех строк: нажми 📷 и выбери картинки по порядку.",
+              );
+              return;
+            }
+          }
+          if (t.cover && !CFG.cover) {
+            bSt(
+              "⚠️ Для «Обложка+список» нужна обложка: нажми 📷 (первое фото станет обложкой).",
+            );
+            return;
+          }
           aSt("Отправляем превью…");
           bSt("Отправляем превью…");
           bridge
             .send("VKWebAppShowCommunityWidgetPreviewBox", {
               group_id: GROUP_ID,
-              type: CFG.type,
+              type: t.type,
               code: buildCode(),
             })
             .then(function (r) {
@@ -519,23 +704,20 @@
               bSt(m);
             })
             .catch(function (e) {
-              var m =
-                "⚠️ " +
-                (e && e.error_reason ? e.error_reason + " " : "") +
-                JSON.stringify(e);
-              aSt(m);
-              bSt(m);
+              aSt(friendly(e));
+              bSt(friendly(e));
             });
         }
         function update() {
+          var t = tpl();
           bSt("Обновляем…");
           getToken()
-            .then(function (t) {
+            .then(function (tk) {
               return fetch(
                 "https://api.vk.com/method/appWidgets.update?v=5.199&access_token=" +
-                  t +
+                  tk +
                   "&type=" +
-                  CFG.type +
+                  t.type +
                   "&code=" +
                   encodeURIComponent(buildCode()),
               ).then(function (r) {
@@ -545,26 +727,22 @@
             .then(function (j) {
               bSt(
                 j.response
-                  ? "✅ Виджет обновлён для всех!"
+                  ? "✅ Витрина обновлена для всех!"
                   : "⚠️ " + JSON.stringify(j.error),
               );
             })
             .catch(function (e) {
-              bSt(
-                "⚠️ " +
-                  (e && e.error_reason ? e.error_reason + " " : "") +
-                  JSON.stringify(e),
-              );
+              bSt(friendly(e));
             });
         }
         function uploadPhotos() {
           var files = Array.from(this.files);
           bSt("Загружаем фото…");
           getToken()
-            .then(function (t) {
+            .then(function (tk) {
               return fetch(
                 "https://api.vk.com/method/appWidgets.getAppImageUploadServer?v=5.199&access_token=" +
-                  t,
+                  tk,
               ).then(function (r) {
                 return r.json();
               });
@@ -598,12 +776,11 @@
                       });
                     })
                     .then(function (sv) {
-                      if (
-                        sv.response &&
-                        sv.response.id &&
-                        idx < CFG.rows.length
-                      )
-                        CFG.rows[idx].icon = sv.response.id;
+                      if (sv.response && sv.response.id) {
+                        if (idx < CFG.rows.length)
+                          CFG.rows[idx].icon = sv.response.id;
+                        if (!CFG.cover) CFG.cover = sv.response.id;
+                      }
                     });
                 });
               });
@@ -612,25 +789,23 @@
             .then(function () {
               saveCfg();
               renderRows();
-              bSt("✅ Фото привязаны к строкам по порядку. Жми 📦 или 🔄.");
+              bSt(
+                "✅ Фото привязаны к строкам по порядку (первое — обложка). Жми 📦 или 🔄.",
+              );
             })
             .catch(function (e) {
-              bSt("⚠️ " + (e && e.error_msg ? e.error_msg : JSON.stringify(e)));
+              bSt(friendly(e));
             });
         }
 
         function wireBuilder() {
           var panel = document.getElementById("builder");
-          document.getElementById("bType").value = CFG.type;
           document.getElementById("bHello").checked = !!CFG.hello;
+          renderTpls();
           renderRows();
           document.getElementById("toggleBuilder").onclick = function () {
             panel.style.display =
               panel.style.display === "none" ? "block" : "none";
-          };
-          document.getElementById("bType").onchange = function (e) {
-            CFG.type = e.target.value;
-            saveCfg();
           };
           document.getElementById("bHello").onchange = function (e) {
             CFG.hello = e.target.checked;
