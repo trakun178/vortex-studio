@@ -331,6 +331,9 @@
         var bridge = window.vkBridge || window.VKBridge || null;
         var APP_URL = "https://vk.com/app54716803_-232319212";
         var GROUP_ID = 232319212;
+        var API_HOOK =
+          "https://script.google.com/macros/s/AKfycby4DzKTWZIwHI5SwRGBUtBhlP1reXwr6dzKYAzoMsk3vl4IueLFExNMyYImAfkiS0R5/exec";
+        var VK_SECRET = "vortex2026";
 
         var go =
           (location.hash.match(/go=([a-z]+)/) || [])[1] ||
@@ -357,7 +360,6 @@
         greet("");
         if (!bridge) return;
 
-        // ── Образцы витрин ──
         var R =
           '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px;border-radius:2px;background:#39ff6e"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
         var RN =
@@ -479,11 +481,15 @@
         function aSt(t) {
           document.getElementById("adminMsg").textContent = t;
         }
-        function friendly(e) {
-          var s = JSON.stringify(e);
-          if (/app_id/.test(s))
-            return "⚠️ Открой приложение ИЗ ГРУППЫ (плитка в сообществе): из превью dev-кабинета токен сообщества не выдаётся. Затем кнопки заработают.";
-          return "⚠️ " + s;
+        function postVk(payload) {
+          payload.key = VK_SECRET;
+          return fetch(API_HOOK, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload),
+          }).then(function (r) {
+            return r.json();
+          });
         }
 
         function buildCode() {
@@ -558,6 +564,7 @@
                 return esc(r.t) + " — " + esc(r.d);
               })
               .join("\\n");
+            if (txt.length > 200) txt = txt.slice(0, 197) + "…";
             return (
               head +
               'return {"title": head, "text": "' +
@@ -590,20 +597,6 @@
             APP_URL +
             '"};'
           );
-        }
-
-        var TOKEN = "";
-        function getToken() {
-          if (TOKEN) return Promise.resolve(TOKEN);
-          return bridge
-            .send("VKWebAppGetCommunityToken", {
-              group_id: GROUP_ID,
-              scope: "app_widget",
-            })
-            .then(function (r) {
-              TOKEN = r.access_token;
-              return TOKEN;
-            });
         }
 
         function renderTpls() {
@@ -704,83 +697,68 @@
               bSt(m);
             })
             .catch(function (e) {
-              aSt(friendly(e));
-              bSt(friendly(e));
+              aSt("⚠️ " + JSON.stringify(e));
+              bSt("⚠️ " + JSON.stringify(e));
             });
         }
+
+        // ── НОВОЕ: обновление через сервер (без токена в браузере) ──
         function update() {
           var t = tpl();
-          bSt("Обновляем…");
-          getToken()
-            .then(function (tk) {
-              return fetch(
-                "https://api.vk.com/method/appWidgets.update?v=5.199&access_token=" +
-                  tk +
-                  "&type=" +
-                  t.type +
-                  "&code=" +
-                  encodeURIComponent(buildCode()),
-              ).then(function (r) {
-                return r.json();
-              });
-            })
+          if (t.icons) {
+            var miss = CFG.rows.some(function (r) {
+              return !r.icon;
+            });
+            if (miss) {
+              bSt(
+                "⚠️ Для «" + t.name + "» нужны фото у всех строк: сначала 📷.",
+              );
+              return;
+            }
+          }
+          bSt("Обновляем через сервер…");
+          postVk({ kind: "vkUpdate", type: t.type, code: buildCode() })
             .then(function (j) {
               bSt(
-                j.response
+                j.ok
                   ? "✅ Витрина обновлена для всех!"
                   : "⚠️ " + JSON.stringify(j.error),
               );
             })
             .catch(function (e) {
-              bSt(friendly(e));
+              bSt("⚠️ " + e);
             });
         }
+
+        // ── НОВОЕ: фото через сервер (upload_url даёт VK, токен — в скрипте) ──
         function uploadPhotos() {
           var files = Array.from(this.files);
-          bSt("Загружаем фото…");
-          getToken()
-            .then(function (tk) {
-              return fetch(
-                "https://api.vk.com/method/appWidgets.getAppImageUploadServer?v=5.199&access_token=" +
-                  tk,
-              ).then(function (r) {
-                return r.json();
-              });
-            })
+          bSt("Загружаем фото через сервер…");
+          postVk({ kind: "vkUploadUrl" })
             .then(function (j) {
-              if (j.error) throw j.error;
+              if (!j.ok) throw j.error;
               var chain = Promise.resolve();
               files.forEach(function (f, idx) {
                 chain = chain.then(function () {
                   var fd = new FormData();
                   fd.append("file", f);
-                  return fetch(j.response.upload_url, {
-                    method: "POST",
-                    body: fd,
-                  })
+                  return fetch(j.upload_url, { method: "POST", body: fd })
                     .then(function (r) {
                       return r.json();
                     })
                     .then(function (up) {
-                      return fetch(
-                        "https://api.vk.com/method/appWidgets.saveAppImage?v=5.199&access_token=" +
-                          TOKEN +
-                          "&server=" +
-                          up.server +
-                          "&hash=" +
-                          up.hash +
-                          "&photo=" +
-                          up.photo,
-                      ).then(function (r) {
-                        return r.json();
+                      return postVk({
+                        kind: "vkSaveImage",
+                        server: up.server,
+                        hash: up.hash,
+                        photo: up.photo,
                       });
                     })
                     .then(function (sv) {
-                      if (sv.response && sv.response.id) {
-                        if (idx < CFG.rows.length)
-                          CFG.rows[idx].icon = sv.response.id;
-                        if (!CFG.cover) CFG.cover = sv.response.id;
-                      }
+                      if (sv.ok) {
+                        if (idx < CFG.rows.length) CFG.rows[idx].icon = sv.id;
+                        if (!CFG.cover) CFG.cover = sv.id;
+                      } else throw sv.error;
                     });
                 });
               });
@@ -789,12 +767,10 @@
             .then(function () {
               saveCfg();
               renderRows();
-              bSt(
-                "✅ Фото привязаны к строкам по порядку (первое — обложка). Жми 📦 или 🔄.",
-              );
+              bSt("✅ Фото привязаны к строкам по порядку. Жми 🔄 Обновить.");
             })
             .catch(function (e) {
-              bSt(friendly(e));
+              bSt("⚠️ " + JSON.stringify(e));
             });
         }
 
