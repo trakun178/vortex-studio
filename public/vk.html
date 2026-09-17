@@ -1,439 +1,985 @@
 <!doctype html>
 <html lang="ru">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>VORTEX.studio — услуги и цены</title>
-<style>
-  :root{
-    --g:#39ff6e; --bg:#080b0f; --card:#0e1318; --line:#1e2d3d;
-    --txt:#e8eef4; --mut:#7a9ab0; --dim:#4a6070; --red:#ff5f56;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-  body{background:var(--bg);color:var(--txt);padding:16px 14px 28px}
-  a{color:inherit}
-  .head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  .logo{width:34px;height:34px;border-radius:9px;background:var(--g);color:#08100a;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center}
-  .brand{font-weight:800;letter-spacing:1.5px;font-size:15px}
-  .brand b{color:var(--g)}
-  .hello{font-size:16px;font-weight:800;margin-bottom:4px}
-  .sub{color:var(--mut);font-size:12px;margin-bottom:14px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-  .card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit}
-  .card img{width:100%;height:84px;object-fit:cover;display:block;background:#0a0e14}
-  .card .b{padding:10px 10px 12px;display:flex;flex-direction:column;flex:1}
-  .card h3{font-size:12px;font-weight:800;margin-bottom:3px}
-  .card .p{color:var(--g);font-weight:900;font-size:15px;margin-bottom:5px}
-  .card .d{color:var(--mut);font-size:10.5px;line-height:1.45;margin-bottom:9px;flex:1}
-  .btn{display:block;text-align:center;background:var(--g);color:#08100a;font-size:11.5px;font-weight:800;border-radius:7px;padding:7px 8px}
-  .more{display:block;text-align:center;margin-top:14px;color:var(--mut);font-size:12px;text-decoration:none}
-  .admin{margin-top:22px;border-top:1px solid var(--line);padding-top:14px}
-  .admin>button{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;margin:0 4px 6px 0}
-  .msg{margin-top:8px;font-size:11px;color:var(--mut);word-break:break-word;line-height:1.5}
-  #builder{display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
-  #builder.open{display:block}
-  #builder h4{color:var(--g);font-size:13px;margin-bottom:8px}
-  #builder small{color:var(--dim);font-size:10px}
-  .tpls{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
-  .tpl{border:1px solid var(--line);border-radius:8px;padding:6px;cursor:pointer;background:#0e1318}
-  .tpl.on{border-color:var(--g);background:#0e1a10}
-  .tpl .nm{font-size:10px;font-weight:800;margin-top:4px}
-  .tpl .hn{font-size:9px;color:var(--dim);line-height:1.3}
-  .act{margin-top:10px}
-  .act button{background:var(--g);border:none;color:#08100a;font-weight:800;border-radius:8px;padding:9px 14px;font-size:12px;cursor:pointer;margin:3px 3px 3px 0}
-  .act button.ghost{background:transparent;border:1px solid var(--line);color:var(--mut)}
-  .row{border:1px solid var(--line);border-radius:10px;padding:8px;margin-bottom:8px;background:#0e1318}
-  .row input{width:100%;margin:2px 0 6px;background:#141c24;border:1px solid var(--line);border-radius:6px;color:var(--txt);padding:6px;font-size:12px}
-  .row .del{float:right;background:none;border:none;color:var(--red);cursor:pointer;font-size:12px}
-  .pill{color:var(--g);font-size:10px;margin-top:2px}
-  button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--g);outline-offset:2px}
-</style>
-</head>
-<body>
-  <div class="head">
-    <div class="logo">V</div>
-    <div class="brand">VORTEX.<b>studio</b></div>
-  </div>
-  <p class="hello" id="hello">Добрый день!</p>
-  <p class="sub">AI-студия сайтов под ключ. Фикс-цены, запуск от 7 дней.</p>
-
-  <div class="grid" id="grid"></div>
-  <a class="more" id="moreLink" href="https://vortex-studio.ru/" target="_blank" rel="noopener">Все услуги и цены</a>
-
-  <div class="admin" id="admin" style="display:none">
-    <button id="toggleBuilder">Конструктор витрины</button>
-    <div class="msg" id="adminMsg"></div>
-
-    <div id="builder">
-      <h4>Образец витрины</h4>
-      <div class="tpls" id="tpls"></div>
-      <label style="font-size:11px;color:var(--mut)">
-        <input type="checkbox" id="bHello" /> приветствие по имени посетителя
-      </label>
-      <div id="bRows" style="margin-top:10px"></div>
-      <div class="act">
-        <button class="ghost" id="bAdd">Добавить строку</button>
-        <button class="ghost" id="bPhotos">Загрузить фото</button>
-        <input type="file" id="bFile" accept="image/*" multiple style="display:none" />
-      </div>
-      <div class="act">
-        <button id="bInstall">Установить витрину</button>
-        <button id="bUpdate">Обновить установленную</button>
-        <button class="ghost" id="bSave">Сохранить на сервер</button>
-      </div>
-      <div class="msg" id="bStatus"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>VORTEX.studio — услуги и цены</title>
+    <style>
+      :root {
+        --g: #39ff6e;
+        --bg: #080b0f;
+        --card: #0e1318;
+        --line: #1e2d3d;
+        --txt: #e8eef4;
+        --mut: #7a9ab0;
+        --dim: #4a6070;
+        --red: #ff5f56;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+      body {
+        background: var(--bg);
+        color: var(--txt);
+        padding: 16px 14px 28px;
+      }
+      a {
+        color: inherit;
+      }
+      .head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: var(--g);
+        color: #08100a;
+        font-weight: 900;
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        font-size: 15px;
+      }
+      .brand b {
+        color: var(--g);
+      }
+      .hello {
+        font-size: 16px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+      .sub {
+        color: var(--mut);
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+      }
+      .card img {
+        width: 100%;
+        height: 84px;
+        object-fit: cover;
+        display: block;
+        background: #0a0e14;
+      }
+      .card .b {
+        padding: 10px 10px 12px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .card h3 {
+        font-size: 12px;
+        font-weight: 800;
+        margin-bottom: 3px;
+      }
+      .card .p {
+        color: var(--g);
+        font-weight: 900;
+        font-size: 15px;
+        margin-bottom: 5px;
+      }
+      .card .d {
+        color: var(--mut);
+        font-size: 10.5px;
+        line-height: 1.45;
+        margin-bottom: 9px;
+        flex: 1;
+      }
+      .btn {
+        display: block;
+        text-align: center;
+        background: var(--g);
+        color: #08100a;
+        font-size: 11.5px;
+        font-weight: 800;
+        border-radius: 7px;
+        padding: 7px 8px;
+      }
+      .more {
+        display: block;
+        text-align: center;
+        margin-top: 14px;
+        color: var(--mut);
+        font-size: 12px;
+        text-decoration: none;
+      }
+      .admin {
+        margin-top: 22px;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+      }
+      .admin > button {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--mut);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        margin: 0 4px 6px 0;
+      }
+      .msg {
+        margin-top: 8px;
+        font-size: 11px;
+        color: var(--mut);
+        word-break: break-word;
+        line-height: 1.5;
+      }
+      #builder {
+        display: none;
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        background: var(--card);
+      }
+      #builder.open {
+        display: block;
+      }
+      #builder h4 {
+        color: var(--g);
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      #builder small {
+        color: var(--dim);
+        font-size: 10px;
+      }
+      .tpls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin: 8px 0;
+      }
+      .tpl {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 6px;
+        cursor: pointer;
+        background: #0e1318;
+      }
+      .tpl.on {
+        border-color: var(--g);
+        background: #0e1a10;
+      }
+      .tpl .nm {
+        font-size: 10px;
+        font-weight: 800;
+        margin-top: 4px;
+      }
+      .tpl .hn {
+        font-size: 9px;
+        color: var(--dim);
+        line-height: 1.3;
+      }
+      .act {
+        margin-top: 10px;
+      }
+      .act button {
+        background: var(--g);
+        border: none;
+        color: #08100a;
+        font-weight: 800;
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-size: 12px;
+        cursor: pointer;
+        margin: 3px 3px 3px 0;
+      }
+      .act button.ghost {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--mut);
+      }
+      .row {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px;
+        margin-bottom: 8px;
+        background: #0e1318;
+      }
+      .row input {
+        width: 100%;
+        margin: 2px 0 6px;
+        background: #141c24;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--txt);
+        padding: 6px;
+        font-size: 12px;
+      }
+      .row .del {
+        float: right;
+        background: none;
+        border: none;
+        color: var(--red);
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .pill {
+        color: var(--g);
+        font-size: 10px;
+        margin-top: 2px;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      a:focus-visible {
+        outline: 2px solid var(--g);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var m = location.hash.match(/go=([a-z]+)/);
+        var go = m
+          ? m[1]
+          : new URLSearchParams(location.search).get("go") || "";
+        if (go === "all") {
+          location.replace("https://vortex-studio.ru/");
+          return;
+        }
+        if (go) {
+          location.replace("https://vortex-studio.ru/brief.html?service=" + go);
+          return;
+        }
+      })();
+    </script>
+    <div class="head">
+      <div class="logo">V</div>
+      <div class="brand">VORTEX.<b>studio</b></div>
     </div>
-  </div>
+    <p class="hello" id="hello">Добрый день!</p>
+    <p class="sub">AI-студия сайтов под ключ. Фикс-цены, запуск от 7 дней.</p>
 
-<script>
-(function () {
-  "use strict";
+    <div class="grid" id="grid"></div>
+    <a
+      class="more"
+      id="moreLink"
+      href="https://vortex-studio.ru/"
+      target="_blank"
+      rel="noopener"
+      >Все услуги и цены</a
+    >
 
-  /* ───────── настройки ───────── */
-  var APP_URL    = "https://vk.com/app54716803_-232319212";
-  var GROUP_ID   = 232319212;
-  var SITE       = "https://vortex-studio.ru";
-  var API_HOOK   = "https://script.google.com/macros/s/AKfycbxEJymh4AhHWhrp9AhvZuXqt-AikkntLYdmxqleBQ9XwwU-00A7hTqOMTLFFapEGqcc/exec";
-  var VK_SECRET  = "vortex2026";
-  var ADMIN_KEY  = "vortex2026";           // ?admin=vortex2026 — конструктор вне VK
-  var BRIDGE_CDN = "https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js";
-  var BRIDGE_LOCAL = "/vk-bridge.js";
+    <div class="admin" id="admin" style="display: none">
+      <button id="toggleBuilder">Конструктор витрины</button>
+      <div class="msg" id="adminMsg"></div>
 
-  /* ───────── услуги витрины ───────── */
-  var SERVICES = [
-    { key:"landing",   name:"Лендинг",       price:"15 000 ₽",     descr:"Продающий сайт под ключ, запуск от 7 дней",  img:SITE+"/covers/cover1.png" },
-    { key:"corporate", name:"Корпоративный", price:"60 000 ₽",     descr:"До 20 страниц, CMS-панель, мультиязычность", img:SITE+"/covers/cover3.png" },
-    { key:"portal",    name:"Портал",        price:"от 150 000 ₽", descr:"Личный кабинет, API, роли, DevOps",          img:SITE+"/covers/cover4.png" },
-    { key:"bot",       name:"Telegram-бот",  price:"35 000 ₽",     descr:"Заказы, автоответы, рассылки, оплата в чате", img:SITE+"/covers/cover5.png" }
-  ];
+      <div id="builder">
+        <h4>Образец витрины</h4>
+        <div class="tpls" id="tpls"></div>
+        <label style="font-size: 11px; color: var(--mut)">
+          <input type="checkbox" id="bHello" /> приветствие по имени посетителя
+        </label>
+        <div id="bRows" style="margin-top: 10px"></div>
+        <div class="act">
+          <button class="ghost" id="bAdd">Добавить строку</button>
+          <button class="ghost" id="bPhotos">Загрузить фото</button>
+          <input
+            type="file"
+            id="bFile"
+            accept="image/*"
+            multiple
+            style="display: none"
+          />
+        </div>
+        <div class="act">
+          <button id="bInstall">Установить витрину</button>
+          <button id="bUpdate">Обновить установленную</button>
+          <button class="ghost" id="bSave">Сохранить на сервер</button>
+        </div>
+        <div class="msg" id="bStatus"></div>
+      </div>
+    </div>
 
-  var qs = new URLSearchParams(location.search);
-  var $  = function (id) { return document.getElementById(id); };
+    <script>
+      (function () {
+        "use strict";
 
-  /* ───────── роутинг по #go= ─────────
+        /* ───────── настройки ───────── */
+        var APP_URL = "https://vk.com/app54716803_-232319212";
+        var GROUP_ID = 232319212;
+        var SITE = "https://vortex-studio.ru";
+        var API_HOOK =
+          "https://script.google.com/macros/s/AKfycbxEJymh4AhHWhrp9AhvZuXqt-AikkntLYdmxqleBQ9XwwU-00A7hTqOMTLFFapEGqcc/exec";
+        var VK_SECRET = "vortex2026";
+        var ADMIN_KEY = "vortex2026"; // ?admin=vortex2026 — конструктор вне VK
+        var BRIDGE_CDN =
+          "https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js";
+        var BRIDGE_LOCAL = "/vk-bridge.js";
+
+        /* ───────── услуги витрины ───────── */
+        var SERVICES = [
+          {
+            key: "landing",
+            name: "Лендинг",
+            price: "15 000 ₽",
+            descr: "Продающий сайт под ключ, запуск от 7 дней",
+            img: SITE + "/covers/cover1.png",
+          },
+          {
+            key: "corporate",
+            name: "Корпоративный",
+            price: "60 000 ₽",
+            descr: "До 20 страниц, CMS-панель, мультиязычность",
+            img: SITE + "/covers/cover3.png",
+          },
+          {
+            key: "portal",
+            name: "Портал",
+            price: "от 150 000 ₽",
+            descr: "Личный кабинет, API, роли, DevOps",
+            img: SITE + "/covers/cover4.png",
+          },
+          {
+            key: "bot",
+            name: "Telegram-бот",
+            price: "35 000 ₽",
+            descr: "Заказы, автоответы, рассылки, оплата в чате",
+            img: SITE + "/covers/cover5.png",
+          },
+        ];
+
+        var qs = new URLSearchParams(location.search);
+        var $ = function (id) {
+          return document.getElementById(id);
+        };
+
+        /* ───────── роутинг по #go= ─────────
      Ссылки из виджета ведут на APP_URL#go=landing.
      Приложение само перекидывает на бриф нужной услуги. */
-  var go = (location.hash.match(/go=([a-z_]+)/) || [])[1] || qs.get("go") || "";
-  if (go) { location.replace(SITE + "/brief.html?service=" + encodeURIComponent(go)); return; }
+        var go =
+          (location.hash.match(/go=([a-z_]+)/) || [])[1] || qs.get("go") || "";
+        if (go) {
+          location.replace(
+            SITE + "/brief.html?service=" + encodeURIComponent(go),
+          );
+          return;
+        }
 
-  /* ───────── витрина ───────── */
-  function renderGrid() {
-    $("grid").innerHTML = SERVICES.map(function (s) {
-      return '<a class="card" href="' + SITE + '/brief.html?service=' + s.key + '" target="_blank" rel="noopener">' +
-             '<img src="' + s.img + '" alt="" loading="lazy">' +
-             '<div class="b"><h3>' + s.name + '</h3><div class="p">' + s.price + '</div>' +
-             '<div class="d">' + s.descr + '</div><span class="btn">Выбрать</span></div></a>';
-    }).join("");
-  }
-  function greet(name) {
-    var h = new Date().getHours();
-    var t = h >= 5 && h < 12 ? "Доброе утро" : h < 18 ? "Добрый день" : "Добрый вечер";
-    $("hello").textContent = name ? t + ", " + name + "!" : t + "!";
-  }
-  renderGrid();
-  greet("");
+        /* ───────── витрина ───────── */
+        function renderGrid() {
+          $("grid").innerHTML = SERVICES.map(function (s) {
+            return (
+              '<a class="card" href="' +
+              SITE +
+              "/brief.html?service=" +
+              s.key +
+              '" target="_blank" rel="noopener">' +
+              '<img src="' +
+              s.img +
+              '" alt="" loading="lazy">' +
+              '<div class="b"><h3>' +
+              s.name +
+              '</h3><div class="p">' +
+              s.price +
+              "</div>" +
+              '<div class="d">' +
+              s.descr +
+              '</div><span class="btn">Выбрать</span></div></a>'
+            );
+          }).join("");
+        }
+        function greet(name) {
+          var h = new Date().getHours();
+          var t =
+            h >= 5 && h < 12
+              ? "Доброе утро"
+              : h < 18
+                ? "Добрый день"
+                : "Добрый вечер";
+          $("hello").textContent = name ? t + ", " + name + "!" : t + "!";
+        }
+        renderGrid();
+        greet("");
 
-  /* ───────── шаблоны виджета ─────────
+        /* ───────── шаблоны виджета ─────────
      type   — тип для appWidgets.update / preview box
      img    — размер картинки для appWidgets.getAppImageUploadServer
      needs  — что обязательно для установки */
-  var BAR      = '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px;border-radius:2px;background:#39ff6e"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
-  var BAR_NOIMG= '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
-  var TILE     = '<div style="display:flex;gap:3px;margin:3px 0"><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span></div>';
+        var BAR =
+          '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px;border-radius:2px;background:#39ff6e"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
+        var BAR_NOIMG =
+          '<div style="display:flex;gap:3px;align-items:center;margin:3px 0"><span style="width:8px;height:8px"></span><span style="flex:1;height:3px;background:#2e4050"></span><span style="width:10px;height:6px;border-radius:2px;background:#1e2d3d"></span></div>';
+        var TILE =
+          '<div style="display:flex;gap:3px;margin:3px 0"><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span><span style="flex:1;height:14px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50"></span></div>';
 
-  var TPLS = [
-    { id:"list_photo",   type:"list",         name:"Список с фото", hint:"фото, описание, кнопка", img:"160x160", needs:"icon",  prev:BAR+BAR+BAR },
-    { id:"list",         type:"list",         name:"Список",        hint:"без фото",               img:"160x160", needs:"",      prev:BAR_NOIMG+BAR_NOIMG+BAR_NOIMG },
-    { id:"tiles",        type:"tiles",        name:"Плитки",        hint:"сетка, фото обязательны", img:"160x160", needs:"icon", prev:TILE+TILE },
-    { id:"cover_list",   type:"cover_list",   name:"Обложки",       hint:"широкое фото на строку",  img:"510x128", needs:"icon", prev:'<div style="height:12px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50;margin:3px 0"></div>'+BAR_NOIMG },
-    { id:"compact_list", type:"compact_list", name:"Компактный",    hint:"тонкие строки",           img:"50x50",   needs:"",     prev:'<div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div><div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div><div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div>' },
-    { id:"text",         type:"text",         name:"Текст",         hint:"один текстовый блок",     img:"160x160", needs:"",     prev:'<div style="height:3px;background:#39ff6e;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div>' }
-  ];
-  function tpl() {
-    for (var i = 0; i < TPLS.length; i++) if (TPLS[i].id === CFG.tpl) return TPLS[i];
-    return TPLS[0];
-  }
+        var TPLS = [
+          {
+            id: "list_photo",
+            type: "list",
+            name: "Список с фото",
+            hint: "фото, описание, кнопка",
+            img: "160x160",
+            needs: "icon",
+            prev: BAR + BAR + BAR,
+          },
+          {
+            id: "list",
+            type: "list",
+            name: "Список",
+            hint: "без фото",
+            img: "160x160",
+            needs: "",
+            prev: BAR_NOIMG + BAR_NOIMG + BAR_NOIMG,
+          },
+          {
+            id: "tiles",
+            type: "tiles",
+            name: "Плитки",
+            hint: "сетка, фото обязательны",
+            img: "160x160",
+            needs: "icon",
+            prev: TILE + TILE,
+          },
+          {
+            id: "cover_list",
+            type: "cover_list",
+            name: "Обложки",
+            hint: "широкое фото на строку",
+            img: "510x128",
+            needs: "icon",
+            prev:
+              '<div style="height:12px;border-radius:2px;background:#16321f;border:1px solid #39ff6e50;margin:3px 0"></div>' +
+              BAR_NOIMG,
+          },
+          {
+            id: "compact_list",
+            type: "compact_list",
+            name: "Компактный",
+            hint: "тонкие строки",
+            img: "50x50",
+            needs: "",
+            prev: '<div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div><div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div><div style="height:5px;background:#2e4050;border-radius:2px;margin:4px 0"></div>',
+          },
+          {
+            id: "text",
+            type: "text",
+            name: "Текст",
+            hint: "один текстовый блок",
+            img: "160x160",
+            needs: "",
+            prev: '<div style="height:3px;background:#39ff6e;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div><div style="height:3px;background:#2e4050;margin:3px 0"></div>',
+          },
+        ];
+        function tpl() {
+          for (var i = 0; i < TPLS.length; i++)
+            if (TPLS[i].id === CFG.tpl) return TPLS[i];
+          return TPLS[0];
+        }
 
-  var DEF = {
-    tpl: "list_photo",
-    hello: true,
-    rows: SERVICES.map(function (s) {
-      return { t:s.name + " · " + s.price, d:s.descr, b:"Выбрать", u:APP_URL + "#go=" + s.key, icon:"" };
-    })
-  };
-  var CFG;
-  try { CFG = JSON.parse(localStorage.getItem("vortex_widget_cfg") || "null") || JSON.parse(JSON.stringify(DEF)); }
-  catch (e) { CFG = JSON.parse(JSON.stringify(DEF)); }
-  function saveCfg() { try { localStorage.setItem("vortex_widget_cfg", JSON.stringify(CFG)); } catch (e) {} }
+        var DEF = {
+          tpl: "list_photo",
+          hello: true,
+          rows: SERVICES.map(function (s) {
+            return {
+              t: s.name + " · " + s.price,
+              d: s.descr,
+              b: "Выбрать",
+              u: APP_URL + "#go=" + s.key,
+              icon: "",
+            };
+          }),
+        };
+        var CFG;
+        try {
+          CFG =
+            JSON.parse(localStorage.getItem("vortex_widget_cfg") || "null") ||
+            JSON.parse(JSON.stringify(DEF));
+        } catch (e) {
+          CFG = JSON.parse(JSON.stringify(DEF));
+        }
+        function saveCfg() {
+          try {
+            localStorage.setItem("vortex_widget_cfg", JSON.stringify(CFG));
+          } catch (e) {}
+        }
 
-  function bSt(t) { $("bStatus").textContent = t; }
-  function aSt(t) { $("adminMsg").textContent = t; }
-  function err(e) { return typeof e === "string" ? e : JSON.stringify(e); }
+        function bSt(t) {
+          $("bStatus").textContent = t;
+        }
+        function aSt(t) {
+          $("adminMsg").textContent = t;
+        }
+        function err(e) {
+          return typeof e === "string" ? e : JSON.stringify(e);
+        }
 
-  function postVk(payload) {
-    payload.key = VK_SECRET;
-    // text/plain — чтобы не было preflight-запроса к Apps Script
-    return fetch(API_HOOK, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    }).then(function (r) { return r.json(); });
-  }
+        function postVk(payload) {
+          payload.key = VK_SECRET;
+          // text/plain — чтобы не было preflight-запроса к Apps Script
+          return fetch(API_HOOK, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload),
+          }).then(function (r) {
+            return r.json();
+          });
+        }
 
-  /* ───────── генерация кода виджета (VKScript) ─────────
+        /* ───────── генерация кода виджета (VKScript) ─────────
      Собираем обычный JS-объект и сериализуем через JSON.stringify —
      это снимает все проблемы с кавычками, переносами и юникодом.
      Заголовок подставляем переменной, чтобы работало приветствие по имени. */
-  var HEAD_MARK = "@@HEAD@@";
+        var HEAD_MARK = "@@HEAD@@";
 
-  function buildCode() {
-    var t = tpl(), payload;
+        function buildCode() {
+          var t = tpl(),
+            payload;
 
-    var rows = CFG.rows.map(function (r) {
-      var o = { title: r.t, url: r.u };
-      if (t.id !== "compact_list") o.descr = r.d;
-      if (t.id !== "tiles") { o.button = r.b; o.button_url = r.u; }
-      if (r.icon) { if (t.id === "cover_list") o.cover_id = r.icon; else o.icon_id = r.icon; }
-      return o;
-    });
+          var rows = CFG.rows.map(function (r) {
+            var o = { title: r.t, url: r.u };
+            if (t.id !== "compact_list") o.descr = r.d;
+            if (t.id !== "tiles") {
+              o.button = r.b;
+              o.button_url = r.u;
+            }
+            if (r.icon) {
+              if (t.id === "cover_list") o.cover_id = r.icon;
+              else o.icon_id = r.icon;
+            }
+            return o;
+          });
 
-    if (t.id === "text") {
-      var txt = CFG.rows.map(function (r) { return r.t + " — " + r.d; }).join("\n");
-      if (txt.length > 200) txt = txt.slice(0, 197) + "…";
-      payload = { title: HEAD_MARK, text: txt, more: "Все услуги и цены", more_url: APP_URL };
-    } else if (t.id === "tiles") {
-      payload = { title: HEAD_MARK, tiles: rows, more: "Все услуги и цены", more_url: APP_URL };
-    } else {
-      payload = { title: HEAD_MARK, rows: rows, more: "Все услуги и цены", more_url: APP_URL };
-    }
+          if (t.id === "text") {
+            var txt = CFG.rows
+              .map(function (r) {
+                return r.t + " — " + r.d;
+              })
+              .join("\n");
+            if (txt.length > 200) txt = txt.slice(0, 197) + "…";
+            payload = {
+              title: HEAD_MARK,
+              text: txt,
+              more: "Все услуги и цены",
+              more_url: APP_URL + "#go=all",
+            };
+          } else if (t.id === "tiles") {
+            payload = {
+              title: HEAD_MARK,
+              tiles: rows,
+              more: "Все услуги и цены",
+              more_url: APP_URL + "#go=all",
+            };
+          } else {
+            payload = {
+              title: HEAD_MARK,
+              rows: rows,
+              more: "Все услуги и цены",
+              more_url: APP_URL + "#go=all",
+            };
+          }
 
-    var json = JSON.stringify(payload).replace('"' + HEAD_MARK + '"', "head");
+          var json = JSON.stringify(payload).replace(
+            '"' + HEAD_MARK + '"',
+            "head",
+          );
 
-    var head = CFG.hello
-      ? 'var u = API.users.get()[0];\nvar head = "Добрый день, " + u.first_name + "! VORTEX.studio";\n'
-      : 'var head = "VORTEX.studio — услуги и цены";\n';
+          var head = CFG.hello
+            ? 'var u = API.users.get()[0];\nvar head = "Добрый день, " + u.first_name + "! VORTEX.studio";\n'
+            : 'var head = "VORTEX.studio — услуги и цены";\n';
 
-    return head + "return " + json + ";";
-  }
-
-  /* ───────── проверка перед установкой ───────── */
-  function validate() {
-    var t = tpl();
-    if (!CFG.rows.length && t.id !== "text") return "Добавьте хотя бы одну строку.";
-    if (t.needs === "icon") {
-      var miss = CFG.rows.filter(function (r) { return !r.icon; }).length;
-      if (miss) return "Шаблон «" + t.name + "» требует фото у каждой строки. Без фото: " + miss + ". Нажмите «Загрузить фото».";
-    }
-    for (var i = 0; i < CFG.rows.length; i++) {
-      if (!CFG.rows[i].t) return "Строка " + (i + 1) + ": пустой заголовок.";
-      if (!/^https?:\/\//.test(CFG.rows[i].u)) return "Строка " + (i + 1) + ": ссылка должна начинаться с https://";
-    }
-    return "";
-  }
-
-  /* ───────── рендер конструктора ───────── */
-  function renderTpls() {
-    var box = $("tpls");
-    box.innerHTML = "";
-    TPLS.forEach(function (t) {
-      var d = document.createElement("div");
-      d.className = "tpl" + (t.id === CFG.tpl ? " on" : "");
-      d.innerHTML = '<div style="background:#0a0e14;border-radius:4px;padding:4px">' + t.prev + "</div>" +
-                    '<div class="nm">' + t.name + '</div><div class="hn">' + t.hint + "</div>";
-      d.onclick = function () {
-        if (CFG.tpl !== t.id) {
-          // размеры картинок у шаблонов разные — старые id больше не подойдут
-          var prevImg = tpl().img;
-          CFG.tpl = t.id;
-          if (prevImg !== t.img) CFG.rows.forEach(function (r) { r.icon = ""; });
+          return head + "return " + json + ";";
         }
-        saveCfg(); renderTpls(); renderRows();
-        bSt(tpl().needs === "icon" ? "Для этого шаблона нужны фото (" + tpl().img + ")." : "");
-      };
-      box.appendChild(d);
-    });
-  }
 
-  function renderRows() {
-    var box = $("bRows");
-    box.innerHTML = "";
-    CFG.rows.forEach(function (r, i) {
-      var d = document.createElement("div");
-      d.className = "row";
-      d.innerHTML =
-        '<button class="del" data-del="' + i + '" aria-label="Удалить строку">Удалить</button>' +
-        "<small>Заголовок и цена</small><input data-i='" + i + "' data-f='t'>" +
-        "<small>Описание</small><input data-i='" + i + "' data-f='d'>" +
-        "<small>Кнопка</small><input data-i='" + i + "' data-f='b'>" +
-        "<small>Ссылка</small><input data-i='" + i + "' data-f='u'>" +
-        (r.icon ? '<div class="pill">фото: ' + r.icon + "</div>" : "");
-      box.appendChild(d);
-      // значения ставим через .value — разметка не ломается кавычками в тексте
-      ["t", "d", "b", "u"].forEach(function (f) {
-        d.querySelector("input[data-f='" + f + "']").value = r[f] || "";
-      });
-    });
-  }
+        /* ───────── проверка перед установкой ───────── */
+        function validate() {
+          var t = tpl();
+          if (!CFG.rows.length && t.id !== "text")
+            return "Добавьте хотя бы одну строку.";
+          if (t.needs === "icon") {
+            var miss = CFG.rows.filter(function (r) {
+              return !r.icon;
+            }).length;
+            if (miss)
+              return (
+                "Шаблон «" +
+                t.name +
+                "» требует фото у каждой строки. Без фото: " +
+                miss +
+                ". Нажмите «Загрузить фото»."
+              );
+          }
+          for (var i = 0; i < CFG.rows.length; i++) {
+            if (!CFG.rows[i].t)
+              return "Строка " + (i + 1) + ": пустой заголовок.";
+            if (!/^https?:\/\//.test(CFG.rows[i].u))
+              return (
+                "Строка " + (i + 1) + ": ссылка должна начинаться с https://"
+              );
+          }
+          return "";
+        }
 
-  /* ───────── установка / обновление ───────── */
-  var bridge = null;
+        /* ───────── рендер конструктора ───────── */
+        function renderTpls() {
+          var box = $("tpls");
+          box.innerHTML = "";
+          TPLS.forEach(function (t) {
+            var d = document.createElement("div");
+            d.className = "tpl" + (t.id === CFG.tpl ? " on" : "");
+            d.innerHTML =
+              '<div style="background:#0a0e14;border-radius:4px;padding:4px">' +
+              t.prev +
+              "</div>" +
+              '<div class="nm">' +
+              t.name +
+              '</div><div class="hn">' +
+              t.hint +
+              "</div>";
+            d.onclick = function () {
+              if (CFG.tpl !== t.id) {
+                // размеры картинок у шаблонов разные — старые id больше не подойдут
+                var prevImg = tpl().img;
+                CFG.tpl = t.id;
+                if (prevImg !== t.img)
+                  CFG.rows.forEach(function (r) {
+                    r.icon = "";
+                  });
+              }
+              saveCfg();
+              renderTpls();
+              renderRows();
+              bSt(
+                tpl().needs === "icon"
+                  ? "Для этого шаблона нужны фото (" + tpl().img + ")."
+                  : "",
+              );
+            };
+            box.appendChild(d);
+          });
+        }
 
-  function install() {
-    var bad = validate();
-    if (bad) { bSt(bad); return; }
-    if (!bridge) { bSt("Установка доступна только внутри VK. Вне VK используйте «Обновить установленную»."); return; }
-    bSt("Открываем предпросмотр…");
-    bridge.send("VKWebAppShowCommunityWidgetPreviewBox", {
-      group_id: GROUP_ID, type: tpl().type, code: buildCode()
-    }).then(function (r) {
-      bSt(r && r.result ? "Витрина установлена." : "Предпросмотр закрыт без установки.");
-    }).catch(function (e) { bSt("Не установилось: " + err(e)); });
-  }
+        function renderRows() {
+          var box = $("bRows");
+          box.innerHTML = "";
+          CFG.rows.forEach(function (r, i) {
+            var d = document.createElement("div");
+            d.className = "row";
+            d.innerHTML =
+              '<button class="del" data-del="' +
+              i +
+              '" aria-label="Удалить строку">Удалить</button>' +
+              "<small>Заголовок и цена</small><input data-i='" +
+              i +
+              "' data-f='t'>" +
+              "<small>Описание</small><input data-i='" +
+              i +
+              "' data-f='d'>" +
+              "<small>Кнопка</small><input data-i='" +
+              i +
+              "' data-f='b'>" +
+              "<small>Ссылка</small><input data-i='" +
+              i +
+              "' data-f='u'>" +
+              (r.icon ? '<div class="pill">фото: ' + r.icon + "</div>" : "");
+            box.appendChild(d);
+            // значения ставим через .value — разметка не ломается кавычками в тексте
+            ["t", "d", "b", "u"].forEach(function (f) {
+              d.querySelector("input[data-f='" + f + "']").value = r[f] || "";
+            });
+          });
+        }
 
-  function update() {
-    var bad = validate();
-    if (bad) { bSt(bad); return; }
-    bSt("Обновляем…");
-    postVk({ kind: "vkUpdate", type: tpl().type, code: buildCode() })
-      .then(function (j) { bSt(j.ok ? "Витрина обновлена у всех посетителей." : "Ошибка VK: " + err(j.error)); })
-      .catch(function (e) { bSt("Сервер недоступен: " + err(e)); });
-  }
+        /* ───────── установка / обновление ───────── */
+        var bridge = null;
 
-  /* ───────── загрузка фото ───────── */
-  function fileToBase64(f) {
-    return new Promise(function (res, rej) {
-      var fr = new FileReader();
-      fr.onload = function () { res(String(fr.result).split(",")[1]); };
-      fr.onerror = rej;
-      fr.readAsDataURL(f);
-    });
-  }
+        function install() {
+          var bad = validate();
+          if (bad) {
+            bSt(bad);
+            return;
+          }
+          if (!bridge) {
+            bSt(
+              "Установка доступна только внутри VK. Вне VK используйте «Обновить установленную».",
+            );
+            return;
+          }
+          bSt("Открываем предпросмотр…");
+          bridge
+            .send("VKWebAppShowCommunityWidgetPreviewBox", {
+              group_id: GROUP_ID,
+              type: tpl().type,
+              code: buildCode(),
+            })
+            .then(function (r) {
+              bSt(
+                r && r.result
+                  ? "Витрина установлена."
+                  : "Предпросмотр закрыт без установки.",
+              );
+            })
+            .catch(function (e) {
+              bSt("Не установилось: " + err(e));
+            });
+        }
 
-  function uploadPhotos() {
-    var files = Array.prototype.slice.call(this.files);
-    if (!files.length) return;
-    var itype = tpl().img;
-    var input = this;
-    var done = 0;
-    bSt("Загружаем фото (" + itype + ")…");
-    files.reduce(function (chain, f, idx) {
-      return chain.then(function () {
-        return fileToBase64(f).then(function (b64) {
-          return postVk({ kind:"vkUploadImage", image_type:itype, base64:b64, mime:f.type || "image/png", name:f.name || "icon.png" });
-        }).then(function (sv) {
-          if (!sv.ok) throw sv.error;
-          if (idx < CFG.rows.length) CFG.rows[idx].icon = sv.id;
-          done++;
-          bSt("Загружено " + done + " из " + files.length + "…");
-        });
-      });
-    }, Promise.resolve())
-      .then(function () {
-        saveCfg(); renderRows();
-        bSt("Фото привязаны к строкам по порядку. Теперь «Обновить установленную».");
-      })
-      .catch(function (e) { bSt("Фото не загрузилось: " + err(e)); })
-      .then(function () { input.value = ""; });
-  }
+        function update() {
+          var bad = validate();
+          if (bad) {
+            bSt(bad);
+            return;
+          }
+          bSt("Обновляем…");
+          postVk({ kind: "vkUpdate", type: tpl().type, code: buildCode() })
+            .then(function (j) {
+              bSt(
+                j.ok
+                  ? "Витрина обновлена у всех посетителей."
+                  : "Ошибка VK: " + err(j.error),
+              );
+            })
+            .catch(function (e) {
+              bSt("Сервер недоступен: " + err(e));
+            });
+        }
 
-  /* ───────── синхронизация конфига через сервер ───────── */
-  function saveToServer() {
-    bSt("Сохраняем…");
-    postVk({ kind: "vkCfgSave", cfg: JSON.stringify(CFG) })
-      .then(function (j) { bSt(j.ok ? "Конфиг сохранён на сервере." : "Ошибка: " + err(j.error)); })
-      .catch(function (e) { bSt("Сервер недоступен: " + err(e)); });
-  }
-  function loadFromServer() {
-    return postVk({ kind: "vkCfgLoad" }).then(function (j) {
-      if (j.ok && j.cfg) {
-        try {
-          var c = JSON.parse(j.cfg);
-          if (c && c.rows) { CFG = c; saveCfg(); renderTpls(); renderRows(); $("bHello").checked = !!CFG.hello; }
-        } catch (e) {}
-      }
-    }).catch(function () {});
-  }
+        /* ───────── загрузка фото ───────── */
+        function fileToBase64(f) {
+          return new Promise(function (res, rej) {
+            var fr = new FileReader();
+            fr.onload = function () {
+              res(String(fr.result).split(",")[1]);
+            };
+            fr.onerror = rej;
+            fr.readAsDataURL(f);
+          });
+        }
 
-  /* ───────── сборка конструктора ───────── */
-  function wireBuilder() {
-    $("admin").style.display = "block";
-    $("bHello").checked = !!CFG.hello;
-    renderTpls();
-    renderRows();
-    loadFromServer();
+        function uploadPhotos() {
+          var files = Array.prototype.slice.call(this.files);
+          if (!files.length) return;
+          var itype = tpl().img;
+          var input = this;
+          var done = 0;
+          bSt("Загружаем фото (" + itype + ")…");
+          files
+            .reduce(function (chain, f, idx) {
+              return chain.then(function () {
+                return fileToBase64(f)
+                  .then(function (b64) {
+                    return postVk({
+                      kind: "vkUploadImage",
+                      image_type: itype,
+                      base64: b64,
+                      mime: f.type || "image/png",
+                      name: f.name || "icon.png",
+                    });
+                  })
+                  .then(function (sv) {
+                    if (!sv.ok) throw sv.error;
+                    if (idx < CFG.rows.length) CFG.rows[idx].icon = sv.id;
+                    done++;
+                    bSt("Загружено " + done + " из " + files.length + "…");
+                  });
+              });
+            }, Promise.resolve())
+            .then(function () {
+              saveCfg();
+              renderRows();
+              bSt(
+                "Фото привязаны к строкам по порядку. Теперь «Обновить установленную».",
+              );
+            })
+            .catch(function (e) {
+              bSt("Фото не загрузилось: " + err(e));
+            })
+            .then(function () {
+              input.value = "";
+            });
+        }
 
-    $("toggleBuilder").onclick = function () {
-      var open = $("builder").classList.toggle("open");
-      aSt(open ? "" : "");
-      this.textContent = open ? "Свернуть конструктор" : "Конструктор витрины";
-    };
-    $("bHello").onchange = function (e) { CFG.hello = e.target.checked; saveCfg(); };
-    $("bRows").addEventListener("input", function (e) {
-      var i = e.target.getAttribute("data-i"), f = e.target.getAttribute("data-f");
-      if (i !== null && f) { CFG.rows[Number(i)][f] = e.target.value; saveCfg(); }
-    });
-    $("bRows").addEventListener("click", function (e) {
-      var del = e.target.getAttribute("data-del");
-      if (del !== null) { CFG.rows.splice(Number(del), 1); saveCfg(); renderRows(); }
-    });
-    $("bAdd").onclick = function () {
-      CFG.rows.push({ t:"Услуга · цена", d:"Описание", b:"Выбрать", u:APP_URL, icon:"" });
-      saveCfg(); renderRows();
-    };
-    $("bPhotos").onclick = function () { $("bFile").click(); };
-    $("bFile").onchange = uploadPhotos;
-    $("bInstall").onclick = install;
-    $("bUpdate").onclick = update;
-    $("bSave").onclick = saveToServer;
-  }
+        /* ───────── синхронизация конфига через сервер ───────── */
+        function saveToServer() {
+          bSt("Сохраняем…");
+          postVk({ kind: "vkCfgSave", cfg: JSON.stringify(CFG) })
+            .then(function (j) {
+              bSt(
+                j.ok
+                  ? "Конфиг сохранён на сервере."
+                  : "Ошибка: " + err(j.error),
+              );
+            })
+            .catch(function (e) {
+              bSt("Сервер недоступен: " + err(e));
+            });
+        }
+        function loadFromServer() {
+          return postVk({ kind: "vkCfgLoad" })
+            .then(function (j) {
+              if (j.ok && j.cfg) {
+                try {
+                  var c = JSON.parse(j.cfg);
+                  if (c && c.rows) {
+                    CFG = c;
+                    saveCfg();
+                    renderTpls();
+                    renderRows();
+                    $("bHello").checked = !!CFG.hello;
+                  }
+                } catch (e) {}
+              }
+            })
+            .catch(function () {});
+        }
 
-  /* ───────── инициализация VK Bridge ─────────
+        /* ───────── сборка конструктора ───────── */
+        function wireBuilder() {
+          $("admin").style.display = "block";
+          $("bHello").checked = !!CFG.hello;
+          renderTpls();
+          renderRows();
+          loadFromServer();
+
+          $("toggleBuilder").onclick = function () {
+            var open = $("builder").classList.toggle("open");
+            aSt(open ? "" : "");
+            this.textContent = open
+              ? "Свернуть конструктор"
+              : "Конструктор витрины";
+          };
+          $("bHello").onchange = function (e) {
+            CFG.hello = e.target.checked;
+            saveCfg();
+          };
+          $("bRows").addEventListener("input", function (e) {
+            var i = e.target.getAttribute("data-i"),
+              f = e.target.getAttribute("data-f");
+            if (i !== null && f) {
+              CFG.rows[Number(i)][f] = e.target.value;
+              saveCfg();
+            }
+          });
+          $("bRows").addEventListener("click", function (e) {
+            var del = e.target.getAttribute("data-del");
+            if (del !== null) {
+              CFG.rows.splice(Number(del), 1);
+              saveCfg();
+              renderRows();
+            }
+          });
+          $("bAdd").onclick = function () {
+            CFG.rows.push({
+              t: "Услуга · цена",
+              d: "Описание",
+              b: "Выбрать",
+              u: APP_URL,
+              icon: "",
+            });
+            saveCfg();
+            renderRows();
+          };
+          $("bPhotos").onclick = function () {
+            $("bFile").click();
+          };
+          $("bFile").onchange = uploadPhotos;
+          $("bInstall").onclick = install;
+          $("bUpdate").onclick = update;
+          $("bSave").onclick = saveToServer;
+        }
+
+        /* ───────── инициализация VK Bridge ─────────
      Скрипт грузим с CDN, при неудаче — локальную копию.
      Если моста нет вовсе (открыто вне VK) — витрина всё равно работает. */
-  function loadScript(src) {
-    return new Promise(function (res, rej) {
-      var s = document.createElement("script");
-      s.src = src; s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-  function resolveBridge() {
-    var b = window.vkBridge || window.VKBridge || window.vk_bridge || null;
-    if (b && b.default) b = b.default;
-    return b && typeof b.send === "function" ? b : null;
-  }
+        function loadScript(src) {
+          return new Promise(function (res, rej) {
+            var s = document.createElement("script");
+            s.src = src;
+            s.onload = res;
+            s.onerror = rej;
+            document.head.appendChild(s);
+          });
+        }
+        function resolveBridge() {
+          var b =
+            window.vkBridge || window.VKBridge || window.vk_bridge || null;
+          if (b && b.default) b = b.default;
+          return b && typeof b.send === "function" ? b : null;
+        }
 
-  function startVk() {
-    bridge = resolveBridge();
-    if (!bridge) { startStandalone(); return; }
+        function startVk() {
+          bridge = resolveBridge();
+          if (!bridge) {
+            startStandalone();
+            return;
+          }
 
-    bridge.send("VKWebAppInit").catch(function () {});
-    bridge.send("VKWebAppSetViewSettings", {
-      status_bar_style: "light", action_bar_color: "#080b0f", navigation_bar_color: "#080b0f"
-    }).catch(function () {});
-    bridge.send("VKWebAppGetUserInfo")
-      .then(function (u) { if (u && u.first_name) greet(u.first_name); })
-      .catch(function () {});
+          bridge.send("VKWebAppInit").catch(function () {});
+          bridge
+            .send("VKWebAppSetViewSettings", {
+              status_bar_style: "light",
+              action_bar_color: "#080b0f",
+              navigation_bar_color: "#080b0f",
+            })
+            .catch(function () {});
+          bridge
+            .send("VKWebAppGetUserInfo")
+            .then(function (u) {
+              if (u && u.first_name) greet(u.first_name);
+            })
+            .catch(function () {});
 
-    // Конструктор — только администраторам сообщества
-    var role = qs.get("vk_viewer_group_role") || "";
-    if (role === "admin") wireBuilder();
-  }
+          // Конструктор — только администраторам сообщества
+          var role = qs.get("vk_viewer_group_role") || "";
+          if (role === "admin") wireBuilder();
+        }
 
-  function startStandalone() {
-    // Вне VK: конструктор по ссылке ...?admin=КЛЮЧ (заменяет отдельный builder.html)
-    if (qs.get("admin") === ADMIN_KEY) {
-      wireBuilder();
-      $("builder").classList.add("open");
-      $("toggleBuilder").textContent = "Свернуть конструктор";
-      aSt("Режим вне VK: «Установить» недоступно, работает «Обновить установленную».");
-    }
-  }
+        function startStandalone() {
+          // Вне VK: конструктор по ссылке ...?admin=КЛЮЧ (заменяет отдельный builder.html)
+          if (qs.get("admin") === ADMIN_KEY) {
+            wireBuilder();
+            $("builder").classList.add("open");
+            $("toggleBuilder").textContent = "Свернуть конструктор";
+            aSt(
+              "Режим вне VK: «Установить» недоступно, работает «Обновить установленную».",
+            );
+          }
+        }
 
-  loadScript(BRIDGE_CDN).catch(function () { return loadScript(BRIDGE_LOCAL); })
-    .then(startVk)
-    .catch(startStandalone);
-})();
-</script>
-</body>
+        loadScript(BRIDGE_CDN)
+          .catch(function () {
+            return loadScript(BRIDGE_LOCAL);
+          })
+          .then(startVk)
+          .catch(startStandalone);
+      })();
+    </script>
+  </body>
 </html>
