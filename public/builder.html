@@ -122,7 +122,8 @@
     <h1>🛠 Конструктор витрин <span>VORTEX.studio</span></h1>
     <p class="sub">
       Работает вне VK — без CSP-ограничений. Изменения применяются к витрине
-      группы через сервер (ключ сообщества хранится в Apps Script).
+      группы через сервер (ключи сообщества и приложения хранятся в Apps
+      Script).
     </p>
     <div class="box">
       <h4>Выбери образец витрины</h4>
@@ -152,7 +153,7 @@
       (function () {
         var APP_URL = "https://vk.com/app54716803_-232319212";
         var API_HOOK =
-          "https://script.google.com/macros/s/AKfycbxEJymh4AhHWhrp9AhvZuXqt-AikkntLYdmxqleBQ9XwwU-00A7hTqOMTLFFapEGqcc/exec";
+          "https://script.google.com/macros/s/AKfycbxEJymh4AhHWhrp9AhvZuXqt-AikkntiYdmxg1eBQ9XwWJ-00A7hTqOMTLFFapEGqcc/exec";
         var VK_SECRET = "vortex2026";
 
         var R =
@@ -484,42 +485,42 @@
             });
         }
 
+        function fileToBase64(f) {
+          return new Promise(function (res, rej) {
+            var fr = new FileReader();
+            fr.onload = function () {
+              res(String(fr.result).split(",")[1]);
+            };
+            fr.onerror = rej;
+            fr.readAsDataURL(f);
+          });
+        }
         function uploadPhotos() {
           var files = Array.from(this.files);
+          var itype = tpl().id === "cover_list" ? "510x128" : "160x160";
           bSt("Загружаем фото через сервер…");
-          postVk({
-            kind: "vkUploadUrl",
-            image_type: tpl().id === "cover_list" ? "510x128" : "160x160",
-          })
-            .then(function (j) {
-              if (!j.ok) throw j.error;
-              var chain = Promise.resolve();
-              files.forEach(function (f, idx) {
-                chain = chain.then(function () {
-                  var fd = new FormData();
-                  fd.append("file", f);
-                  return fetch(j.upload_url, { method: "POST", body: fd })
-                    .then(function (r) {
-                      return r.json();
-                    })
-                    .then(function (up) {
-                      return postVk({
-                        kind: "vkSaveImage",
-                        server: up.server,
-                        hash: up.hash,
-                        photo: up.photo,
-                      });
-                    })
-                    .then(function (sv) {
-                      if (sv.ok) {
-                        if (idx < CFG.rows.length) CFG.rows[idx].icon = sv.id;
-                        if (!CFG.cover) CFG.cover = sv.id;
-                      } else throw sv.error;
-                    });
+          var chain = Promise.resolve();
+          files.forEach(function (f, idx) {
+            chain = chain.then(function () {
+              return fileToBase64(f)
+                .then(function (b64) {
+                  return postVk({
+                    kind: "vkUploadImage",
+                    image_type: itype,
+                    base64: b64,
+                    mime: f.type || "image/png",
+                    name: f.name || "icon.png",
+                  });
+                })
+                .then(function (sv) {
+                  if (sv.ok) {
+                    if (idx < CFG.rows.length) CFG.rows[idx].icon = sv.id;
+                    if (!CFG.cover) CFG.cover = sv.id;
+                  } else throw sv.error;
                 });
-              });
-              return chain;
-            })
+            });
+          });
+          chain
             .then(function () {
               saveCfg();
               renderRows();
