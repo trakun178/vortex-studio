@@ -423,6 +423,22 @@
         if (bridge && IN_VK) {
           try {
             bridge
+              .send("VKWebAppInit")
+              .then(function () {})
+              .catch(function () {});
+          } catch (e) {}
+          try {
+            bridge
+              .send("VKWebAppSetViewSettings", {
+                status_bar_style: "light",
+                action_bar_color: "#080b0f",
+                navigation_bar_color: "#080b0f",
+              })
+              .then(function () {})
+              .catch(function () {});
+          } catch (e) {}
+          try {
+            bridge
               .send("VKWebAppGetUserInfo")
               .then(function (u) {
                 if (u && u.first_name) greet(u.first_name);
