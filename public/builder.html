@@ -487,7 +487,10 @@
         function uploadPhotos() {
           var files = Array.from(this.files);
           bSt("Загружаем фото через сервер…");
-          postVk({ kind: "vkUploadUrl" })
+          postVk({
+            kind: "vkUploadUrl",
+            image_type: tpl().id === "cover_list" ? "510x128" : "160x160",
+          })
             .then(function (j) {
               if (!j.ok) throw j.error;
               var chain = Promise.resolve();
