@@ -780,8 +780,7 @@
           renderTpls();
           renderRows();
           document.getElementById("toggleBuilder").onclick = function () {
-            panel.style.display =
-              panel.style.display === "none" ? "block" : "none";
+            window.open("https://vortex-studio.ru/builder.html", "_blank");
           };
           document.getElementById("bHello").onchange = function (e) {
             CFG.hello = e.target.checked;
