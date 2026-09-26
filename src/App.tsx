@@ -130,10 +130,11 @@ const PORTFOLIO = [
     link: "https://shabashka.sofoniya.ru",
   },
   {
-    title: "MedCore",
-    category: "Медицина / Корп. сайт",
-    year: "2024",
-    img: "https://images.unsplash.com/photo-1520583457224-aee11bad5112?w=600&h=400&fit=crop&auto=format",
+    title: "Перетяжка и ремонт мягкой мебели в ДНР — SOFONIYA",
+    category: "Лендинг для мастерской перетяжки.",
+    year: "2026",
+    img: "/img/peretyazhka.jpg",
+    link: "https://peretyazhka.sofoniya.ru/",
   },
   {
     title: "LoftStudio",
